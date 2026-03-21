@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nouveautés IA — Veille Pédagogique 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fafaf8;
+    --surface: #ffffff;
+    --surface2: #f4f4f0;
+    --border: #e2e2dc;
+    --border2: #d0d0c8;
+    --text: #1a1a18;
+    --muted: #6b6b62;
+    --light: #9a9a90;
+    --accent: #1a4fad;
+    --accent-light: #eef2fc;
+    --red: #c0392b;
+    --green: #1a7a4a;
+    --gold: #8a6a00;
+    --gold-bg: #fffbeb;
+    --gold-border: #f0d060;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--surface);
+    border-bottom: 2px solid var(--text);
+    padding: 0 48px;
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 0 14px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .logo-area { display: flex; align-items: baseline; gap: 14px; }
+  .logo-text {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.05rem; font-weight: 700;
+    color: var(--text); text-decoration: none;
+  }
+  .logo-divider { color: var(--border2); }
+  .logo-sub { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+
+  .nav-links { display: flex; gap: 4px; }
+  .nav-link {
+    font-size: 13px; font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    transition: all 0.12s;
+  }
+  .nav-link:hover { background: var(--surface2); color: var(--text); }
+  .nav-link.active {
+    background: var(--text); color: #fff;
+    border-color: var(--text);
+  }
+  .nav-link.admin {
+    border-color: var(--border2); color: var(--muted);
+  }
+  .nav-link.admin:hover { color: var(--text); background: var(--surface2); }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 48px 32px;
+  }
+  .header-inner { max-width: 1100px; margin: 0 auto; }
+  .page-eyebrow {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--gold); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .page-eyebrow::before {
+    content: ''; display: inline-block;
+    width: 20px; height: 2px; background: var(--gold);
+  }
+  h1 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+    font-weight: 700; letter-spacing: -0.02em;
+    line-height: 1.1; margin-bottom: 10px;
+  }
+  h1 em { font-style: italic; color: var(--accent); }
+  .header-desc {
+    font-size: 14px; color: var(--muted);
+    max-width: 580px; line-height: 1.65;
+    margin-bottom: 24px;
+  }
+  .header-stats {
+    display: flex; gap: 0;
+    border: 1px solid var(--border2);
+    border-radius: 5px; overflow: hidden;
+    width: fit-content;
+  }
+  .hstat {
+    padding: 8px 18px; border-right: 1px solid var(--border2);
+    text-align: center;
+  }
+  .hstat:last-child { border-right: none; }
+  .hstat strong { display: block; font-size: 1.2rem; font-weight: 700; line-height: 1; }
+  .hstat span { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* ── TOOLBAR ── */
+  .toolbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border2);
+    padding: 14px 48px;
+    position: sticky; top: 0; z-index: 100;
+    display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  }
+  .toolbar-label {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--light); white-space: nowrap;
+  }
+  .filter-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip {
+    font-size: 12px; font-weight: 500;
+    padding: 5px 12px; border-radius: 20px;
+    border: 1px solid var(--border2);
+    background: transparent; color: var(--muted);
+    cursor: pointer; transition: all 0.12s; white-space: nowrap;
+  }
+  .chip:hover { background: var(--surface2); color: var(--text); }
+  .chip.active { background: var(--text); border-color: var(--text); color: #fff; }
+
+  /* ── MAIN ── */
+  main { max-width: 1100px; margin: 0 auto; padding: 40px 48px 80px; }
+
+  /* ── TIMELINE WEEK ── */
+  .week-block { margin-bottom: 48px; }
+  .week-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; padding-bottom: 12px;
+    border-bottom: 2px solid var(--text);
+  }
+  .week-label {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.1rem; font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .week-badge {
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    padding: 3px 9px; border-radius: 3px;
+    background: var(--gold-bg); color: var(--gold);
+    border: 1px solid var(--gold-border);
+  }
+  .week-count {
+    font-size: 12px; color: var(--light);
+    margin-left: auto;
+  }
+
+  /* ── NEWS CARDS ── */
+  .news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px;
+  }
+
+  .news-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 3px solid;
+    border-radius: 4px;
+    padding: 18px 20px;
+    transition: box-shadow 0.15s, transform 0.15s;
+    animation: fadeUp 0.3s ease both;
+  }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+  .news-card:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+  }
+
+  .news-card-top {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+  }
+  .news-card-icon {
+    width: 28px; height: 28px; border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; border: 1px solid var(--border); flex-shrink: 0;
+  }
+  .news-card-tool {
+    font-weight: 700; font-size: 13px; flex: 1;
+  }
+  .news-card-date {
+    font-size: 10px; color: var(--light);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+
+  .news-card-cat {
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    margin-bottom: 8px; margin-left: 36px;
+  }
+
+  .news-card-text {
+    font-size: 13px; line-height: 1.6; color: #3a3a32;
+    margin-bottom: 12px;
+  }
+
+  .news-card-source {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.07em; padding: 3px 8px;
+    border-radius: 3px;
+    background: var(--surface2); color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .news-card-source.source-gabzer { background: #fef3ff; color: #7a2a8a; border-color: #e8b0f8; }
+  .news-card-source.source-superproductif { background: #f0f9ff; color: #0a5a8a; border-color: #b0d8f8; }
+  .news-card-source.source-mathieu { background: #f0fff8; color: #0a6a3a; border-color: #a0d8b8; }
+  .news-card-source.source-claude { background: var(--accent-light); color: var(--accent); border-color: #c0d0f0; }
+
+  .news-card-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border);
+  }
+  .news-card-link {
+    font-size: 12px; font-weight: 600; color: var(--accent);
+    text-decoration: none;
+  }
+  .news-card-link:hover { text-decoration: underline; }
+
+  /* ── SOURCES BLOCK ── */
+  .sources-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px 28px;
+    margin-bottom: 40px;
+  }
+  .sources-title {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--muted); margin-bottom: 16px;
+    padding-bottom: 10px; border-bottom: 1px solid var(--border);
+  }
+  .sources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+  }
+  .source-chip {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+  .source-chip-icon { font-size: 18px; flex-shrink: 0; }
+  .source-chip-name { font-size: 12px; font-weight: 600; color: var(--text); }
+  .source-chip-sub { font-size: 11px; color: var(--muted); }
+  .source-status { margin-left: auto; font-size: 11px; font-weight: 600; }
+  .source-status.ok { color: var(--green); }
+  .source-status.ko { color: var(--red); }
+
+  /* ── EMPTY ── */
+  #empty-state {
+    display: none; text-align: center;
+    padding: 80px 20px; color: var(--muted);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+  #empty-state p { font-size: 14px; margin-top: 8px; }
+
+  /* ── LOADING ── */
+  #loading {
+    text-align: center; padding: 60px;
+    color: var(--muted); font-size: 14px;
+  }
+  .spinner {
+    width: 24px; height: 24px;
+    border: 2px solid var(--border2);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  footer {
+    text-align: center; padding: 32px 48px;
+    color: var(--light); font-size: 12px;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+  footer a { color: var(--muted); }
+
+  @media (max-width: 640px) {
+    nav, header, .toolbar, main { padding-left: 20px; padding-right: 20px; }
+    .news-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo-area">
+      <a href="index.html" class="logo-text">Veille IA</a>
+      <span class="logo-divider">|</span>
+      <span class="logo-sub">Tableau de bord pédagogique</span>
+    </div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">🗂 Tous les outils</a>
+      <a href="nouveautes.html" class="nav-link active">🗞 Nouveautés</a>
+      <a href="admin.html" class="nav-link admin">⚙️ Admin</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="header-inner">
+    <div class="page-eyebrow">Veille automatique hebdomadaire</div>
+    <h1>Nouveautés <em>& actualités</em> IA</h1>
+    <p class="header-desc">
+      Toutes les mises à jour, nouvelles fonctionnalités et annonces détectées
+      automatiquement chaque semaine sur les outils référencés dans le tableau.
+      Sources : Claude AI + Gabzer, Superproductif, Mathieu Ibanez.
+    </p>
+    <div class="header-stats">
+      <div class="hstat"><strong id="stat-total">—</strong><span>Actualités</span></div>
+      <div class="hstat"><strong id="stat-tools">—</strong><span>Outils</span></div>
+      <div class="hstat"><strong id="stat-sources">3</strong><span>Sources</span></div>
+      <div class="hstat"><strong id="stat-update">—</strong><span>Mise à jour</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <span class="toolbar-label">Filtrer</span>
+  <div class="filter-chips" id="filter-chips">
+    <button class="chip active" data-filter="all">Toutes les actualités</button>
+    <button class="chip" data-filter="source-gabzer">Via Gabzer</button>
+    <button class="chip" data-filter="source-superproductif">Via Superproductif</button>
+    <button class="chip" data-filter="source-mathieu">Via Mathieu Ibanez</button>
+    <button class="chip" data-filter="source-claude">Veille Claude IA</button>
+  </div>
+</div>
+
+<main>
+  <!-- Sources status -->
+  <div class="sources-section">
+    <div class="sources-title">Sources de veille surveillées</div>
+    <div class="sources-grid">
+      <div class="source-chip">
+        <div class="source-chip-icon">📱</div>
+        <div>
+          <div class="source-chip-name">Gabzer (Gabriel Sagnet)</div>
+          <div class="source-chip-sub">gabzer.fr · 1M+ abonnés</div>
+        </div>
+        <div class="source-status ok" id="src-gabzer">✓</div>
+      </div>
+      <div class="source-chip">
+        <div class="source-chip-icon">⚡</div>
+        <div>
+          <div class="source-chip-name">Superproductif</div>
+          <div class="source-chip-sub">newsletter.superproductif.fr</div>
+        </div>
+        <div class="source-status ok" id="src-superproductif">✓</div>
+      </div>
+      <div class="source-chip">
+        <div class="source-chip-icon">🎨</div>
+        <div>
+          <div class="source-chip-name">Mathieu Ibanez</div>
+          <div class="source-chip-sub">web.mathieuibanez.com</div>
+        </div>
+        <div class="source-status ok" id="src-mathieu">✓</div>
+      </div>
+      <div class="source-chip">
+        <div class="source-chip-icon">🧠</div>
+        <div>
+          <div class="source-chip-name">Veille Claude AI</div>
+          <div class="source-chip-sub">Analyse hebdomadaire automatique</div>
+        </div>
+        <div class="source-status ok">✓</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="loading">
+    <div class="spinner"></div>
+    Chargement des actualités…
+  </div>
+  <div id="content" style="display:none"></div>
+  <div id="empty-state">
+    <div style="font-size:36px">🔭</div>
+    <p>Aucune actualité trouvée pour ce filtre.</p>
+  </div>
+</main>
+
+<footer>
+  Veille IA Pédagogique — Licence / Bachelor &nbsp;·&nbsp;
+  Mise à jour automatique hebdomadaire &nbsp;·&nbsp;
+  <a href="index.html">← Retour au tableau des outils</a>
+</footer>
+
+<script>
+// ── Tool metadata (icon + category + url) ───────────────────────────────────
+const TOOL_META = {
+  "ChatGPT":            { icon:"🤖", cat:"Assistant IA",       url:"https://chat.openai.com",      color:"#1a4fad" },
+  "Claude":             { icon:"🧠", cat:"Assistant IA",       url:"https://claude.ai",             color:"#1a4fad" },
+  "Gemini":             { icon:"♊",  cat:"Assistant IA",       url:"https://gemini.google.com",     color:"#1a4fad" },
+  "Le Chat (Mistral)":  { icon:"🇫🇷", cat:"Assistant IA",       url:"https://chat.mistral.ai",       color:"#1a4fad" },
+  "Midjourney":         { icon:"🎨", cat:"Image / Design",     url:"https://www.midjourney.com",    color:"#9b2335" },
+  "DALL·E / GPT Image": { icon:"🖼", cat:"Image / Design",     url:"https://chat.openai.com",       color:"#9b2335" },
+  "Adobe Firefly":      { icon:"🔥", cat:"Image / Design",     url:"https://firefly.adobe.com",     color:"#9b2335" },
+  "Canva AI":           { icon:"✏️", cat:"Image / Design",     url:"https://www.canva.com",         color:"#9b2335" },
+  "Ideogram AI":        { icon:"🔤", cat:"Image / Design",     url:"https://ideogram.ai",           color:"#9b2335" },
+  "Suno AI":            { icon:"🎵", cat:"Musique / Audio",    url:"https://suno.com",              color:"#5a3a8a" },
+  "Udio":               { icon:"🎶", cat:"Musique / Audio",    url:"https://www.udio.com",          color:"#5a3a8a" },
+  "ElevenLabs":         { icon:"🎙", cat:"Musique / Audio",    url:"https://elevenlabs.io",         color:"#5a3a8a" },
+  "Soundraw":           { icon:"🎸", cat:"Musique / Audio",    url:"https://soundraw.io",           color:"#5a3a8a" },
+  "Runway Gen-4.5":     { icon:"🎬", cat:"Vidéo",              url:"https://runwayml.com",          color:"#b84a00" },
+  "Sora (OpenAI)":      { icon:"🌀", cat:"Vidéo",              url:"https://sora.com",              color:"#b84a00" },
+  "HeyGen":             { icon:"👤", cat:"Vidéo",              url:"https://www.heygen.com",        color:"#b84a00" },
+  "Veo 3 (Google)":     { icon:"🎥", cat:"Vidéo",              url:"https://gemini.google.com",     color:"#b84a00" },
+  "Descript":           { icon:"✂️", cat:"Vidéo",              url:"https://www.descript.com",      color:"#b84a00" },
+  "Notion AI":          { icon:"📝", cat:"Texte / Rédaction",  url:"https://www.notion.so",         color:"#1a6a3a" },
+  "Grammarly":          { icon:"✅", cat:"Texte / Rédaction",  url:"https://www.grammarly.com",     color:"#1a6a3a" },
+  "Copy.ai":            { icon:"📋", cat:"Texte / Rédaction",  url:"https://www.copy.ai",           color:"#1a6a3a" },
+  "GitHub Copilot":     { icon:"🐙", cat:"Code",               url:"https://github.com/features/copilot", color:"#0a5a7a" },
+  "Cursor":             { icon:"⚡", cat:"Code",               url:"https://www.cursor.com",        color:"#0a5a7a" },
+  "Replit AI":          { icon:"🔄", cat:"Code",               url:"https://replit.com",            color:"#0a5a7a" },
+  "Lovable":            { icon:"💜", cat:"Code",               url:"https://lovable.dev",           color:"#0a5a7a" },
+  "Gamma":              { icon:"✨", cat:"Présentations",      url:"https://gamma.app",             color:"#8a5a00" },
+  "Beautiful.ai":       { icon:"🎯", cat:"Présentations",      url:"https://www.beautiful.ai",      color:"#8a5a00" },
+  "Napkin AI":          { icon:"🗒", cat:"Présentations",      url:"https://www.napkin.ai",         color:"#8a5a00" },
+  "Perplexity AI":      { icon:"🔍", cat:"Recherche / Analyse",url:"https://www.perplexity.ai",    color:"#6a2a7a" },
+  "NotebookLM":         { icon:"📚", cat:"Recherche / Analyse",url:"https://notebooklm.google.com",color:"#6a2a7a" },
+  "Consensus":          { icon:"🔬", cat:"Recherche / Analyse",url:"https://consensus.app",         color:"#6a2a7a" },
+  "D-ID":               { icon:"🎭", cat:"Avatars / Voix",     url:"https://www.d-id.com",          color:"#8a2a4a" },
+  "Murf AI":            { icon:"🔊", cat:"Avatars / Voix",     url:"https://murf.ai",               color:"#8a2a4a" },
+  "Framer AI":          { icon:"🌐", cat:"Design / No-code",   url:"https://www.framer.com",        color:"#0a6a5a" },
+};
+
+// Detect source from news text
+function detectSource(text) {
+  if (!text) return "claude";
+  const t = text.toLowerCase();
+  if (t.includes("gabzer")) return "gabzer";
+  if (t.includes("superproductif")) return "superproductif";
+  if (t.includes("mathieu ibanez") || t.includes("mathieu")) return "mathieu";
+  return "claude";
+}
+
+function sourceLabel(src) {
+  const map = {
+    gabzer: "Via Gabzer",
+    superproductif: "Via Superproductif",
+    mathieu: "Via Mathieu Ibanez",
+    claude: "Veille Claude IA",
+  };
+  return map[src] || "Claude IA";
+}
+
+// Build flat list of all news items
+function buildNewsList(newsData) {
+  const items = [];
+  for (const [tool, entries] of Object.entries(newsData)) {
+    const meta = TOOL_META[tool] || { icon:"🔧", cat:"Autre", url:"#", color:"#555" };
+    for (const entry of entries) {
+      items.push({
+        tool, icon: meta.icon, cat: meta.cat,
+        url: meta.url, color: meta.color,
+        date: entry.date || "",
+        text: entry.text || "",
+        source: detectSource(entry.text),
+      });
+    }
+  }
+  // Sort most recent first (best effort — by date string position)
+  return items;
+}
+
+// Group by week label (use date field or fallback)
+function groupByWeek(items) {
+  const groups = {};
+  for (const item of items) {
+    const key = item.date || "Date inconnue";
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(item);
+  }
+  return groups;
+}
+
+let ALL_ITEMS = [];
+let activeFilter = "all";
+
+function render(filter) {
+  const content = document.getElementById("content");
+  const empty   = document.getElementById("empty-state");
+
+  const filtered = filter === "all"
+    ? ALL_ITEMS
+    : ALL_ITEMS.filter(i => `source-${i.source}` === filter);
+
+  if (filtered.length === 0) {
+    content.style.display = "none";
+    empty.style.display = "block";
+    return;
+  }
+  empty.style.display = "none";
+  content.style.display = "block";
+
+  const grouped = groupByWeek(filtered);
+  let html = "";
+
+  for (const [week, items] of Object.entries(grouped)) {
+    html += `
+      <div class="week-block">
+        <div class="week-header">
+          <div class="week-label">${week}</div>
+          <div class="week-badge">Semaine</div>
+          <div class="week-count">${items.length} actualité${items.length > 1 ? "s" : ""}</div>
+        </div>
+        <div class="news-grid">
+          ${items.map((item, i) => `
+            <div class="news-card" style="border-top-color:${item.color};animation-delay:${i*40}ms">
+              <div class="news-card-top">
+                <div class="news-card-icon" style="background:${item.color}12">${item.icon}</div>
+                <div class="news-card-tool">${item.tool}</div>
+                <div class="news-card-date">${item.date}</div>
+              </div>
+              <div class="news-card-cat" style="color:${item.color}">${item.cat}</div>
+              <div class="news-card-text">${item.text}</div>
+              <div class="news-card-footer">
+                <span class="news-card-source source-${item.source}">${sourceLabel(item.source)}</span>
+                <a class="news-card-link" href="${item.url}" target="_blank">Voir l'outil →</a>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      </div>`;
+  }
+
+  content.innerHTML = html;
+}
+
+// ── Load news.json ───────────────────────────────────────────────────────────
+async function init() {
+  const loading = document.getElementById("loading");
+  try {
+    const r = await fetch("news.json?t=" + Date.now());
+    if (!r.ok) throw new Error("not found");
+    const data = await r.json();
+
+    ALL_ITEMS = buildNewsList(data.news || {});
+
+    // Stats
+    document.getElementById("stat-total").textContent  = ALL_ITEMS.length;
+    document.getElementById("stat-tools").textContent  = Object.keys(data.news || {}).length;
+    document.getElementById("stat-update").textContent = data.lastUpdate || "—";
+
+    loading.style.display = "none";
+    render(activeFilter);
+
+  } catch(e) {
+    loading.innerHTML = `<p style="color:#c0392b">Impossible de charger news.json.<br>
+    Assure-toi que le fichier est bien dans le même dossier que cette page.</p>`;
+  }
+}
+
+// ── Filters ──────────────────────────────────────────────────────────────────
+document.getElementById("filter-chips").addEventListener("click", e => {
+  const chip = e.target.closest(".chip");
+  if (!chip) return;
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  chip.classList.add("active");
+  activeFilter = chip.dataset.filter;
+  render(activeFilter);
+});
+
+init();
+</script>
+</body>
+</html>

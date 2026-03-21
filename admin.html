@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Veille IA Pédagogique</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fafaf8;
+    --surface: #ffffff;
+    --surface2: #f4f4f0;
+    --surface3: #eeeee8;
+    --border: #e2e2dc;
+    --border2: #d0d0c8;
+    --text: #1a1a18;
+    --muted: #6b6b62;
+    --light: #9a9a90;
+    --accent: #1a4fad;
+    --accent-light: #eef2fc;
+    --red: #c0392b;
+    --red-bg: #fff5f4;
+    --green: #1a7a4a;
+    --green-bg: #f0faf4;
+    --gold: #8a6a00;
+    --gold-bg: #fffbeb;
+    --orange: #c0620a;
+    --orange-bg: #fff7f0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg); color: var(--text);
+    min-height: 100vh; font-size: 14px; line-height: 1.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--surface);
+    border-bottom: 2px solid var(--text);
+    padding: 0 48px;
+  }
+  .nav-inner {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    padding: 16px 0; flex-wrap: wrap; gap: 16px;
+  }
+  .logo-area { display: flex; align-items: baseline; gap: 12px; }
+  .logo-text {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1rem; font-weight: 700;
+    color: var(--text); text-decoration: none;
+  }
+  .logo-divider { color: var(--border2); }
+  .logo-sub { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-link {
+    font-size: 13px; font-weight: 500; color: var(--muted);
+    text-decoration: none; padding: 6px 14px;
+    border-radius: 4px; border: 1px solid transparent;
+    transition: all 0.12s;
+  }
+  .nav-link:hover { background: var(--surface2); color: var(--text); }
+  .nav-link.active { background: var(--text); color: #fff; border-color: var(--text); }
+
+  /* ── ADMIN HEADER ── */
+  .admin-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 48px 24px;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+  }
+  .admin-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.4rem; font-weight: 700; letter-spacing: -0.02em;
+  }
+  .admin-title span { color: var(--muted); font-style: italic; font-weight: 400; }
+  .admin-subtitle { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  .admin-header-actions { display: flex; gap: 8px; align-items: center; }
+
+  /* ── MAIN LAYOUT ── */
+  .admin-body {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: calc(100vh - 120px);
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 24px 0;
+  }
+  .sidebar-section { margin-bottom: 8px; }
+  .sidebar-section-title {
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--light); padding: 6px 20px; margin-bottom: 2px;
+  }
+  .sidebar-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 9px 20px; cursor: pointer;
+    font-size: 13px; font-weight: 500; color: var(--muted);
+    border-left: 2px solid transparent;
+    transition: all 0.1s;
+  }
+  .sidebar-item:hover { background: var(--surface2); color: var(--text); }
+  .sidebar-item.active {
+    background: var(--accent-light); color: var(--accent);
+    border-left-color: var(--accent);
+  }
+  .sidebar-item .si-icon { font-size: 15px; width: 18px; text-align: center; }
+  .sidebar-divider {
+    height: 1px; background: var(--border);
+    margin: 10px 20px;
+  }
+
+  /* ── CONTENT AREA ── */
+  .content-area { padding: 32px 40px; overflow-y: auto; }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ── SECTION HEADERS ── */
+  .section-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.1rem; font-weight: 700;
+    margin-bottom: 6px; letter-spacing: -0.01em;
+  }
+  .section-desc { font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
+
+  /* ── STAT CARDS ── */
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px; margin-bottom: 32px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px; padding: 16px 18px;
+  }
+  .stat-card-value {
+    font-size: 1.8rem; font-weight: 700;
+    line-height: 1; margin-bottom: 4px;
+  }
+  .stat-card-label {
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
+  }
+  .stat-card.green { border-top: 3px solid var(--green); }
+  .stat-card.blue  { border-top: 3px solid var(--accent); }
+  .stat-card.gold  { border-top: 3px solid var(--gold); }
+  .stat-card.red   { border-top: 3px solid var(--red); }
+
+  /* ── TABLES ── */
+  .data-table {
+    width: 100%; border-collapse: collapse;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 5px; overflow: hidden;
+    font-size: 13px; margin-bottom: 24px;
+  }
+  .data-table thead th {
+    background: var(--surface2); text-align: left;
+    padding: 10px 14px; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
+    border-bottom: 1px solid var(--border2);
+  }
+  .data-table tbody td {
+    padding: 11px 14px; border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .data-table tbody tr:last-child td { border-bottom: none; }
+  .data-table tbody tr:hover td { background: #fafaf5; }
+
+  /* ── FORM ELEMENTS ── */
+  .form-group { margin-bottom: 20px; }
+  .form-label {
+    display: block; font-size: 12px; font-weight: 600;
+    color: var(--text); margin-bottom: 6px;
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .form-input, .form-select, .form-textarea {
+    width: 100%; background: var(--surface2);
+    border: 1px solid var(--border2); border-radius: 5px;
+    padding: 9px 12px; color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 13px;
+    outline: none; transition: border-color 0.15s;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--accent); background: #fff;
+  }
+  .form-textarea { resize: vertical; min-height: 80px; }
+  .form-hint { font-size: 11px; color: var(--light); margin-top: 4px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+    padding: 8px 16px; border-radius: 4px; cursor: pointer;
+    transition: all 0.12s; text-decoration: none; border: 1px solid transparent;
+  }
+  .btn-primary { background: var(--text); color: #fff; border-color: var(--text); }
+  .btn-primary:hover { opacity: 0.82; }
+  .btn-secondary { background: transparent; color: var(--muted); border-color: var(--border2); }
+  .btn-secondary:hover { background: var(--surface2); color: var(--text); }
+  .btn-danger { background: var(--red-bg); color: var(--red); border-color: #f0b0a8; }
+  .btn-danger:hover { background: #ffe8e6; }
+  .btn-success { background: var(--green-bg); color: var(--green); border-color: #a0d8b8; }
+  .btn-success:hover { background: #e0f5ea; }
+  .btn-sm { padding: 5px 10px; font-size: 11px; }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 2px 7px; border-radius: 3px; border: 1px solid;
+  }
+  .badge-green { color: var(--green); border-color: #a0d8b8; background: var(--green-bg); }
+  .badge-red   { color: var(--red);   border-color: #f0b0a8; background: var(--red-bg); }
+  .badge-gold  { color: var(--gold);  border-color: #f0d060; background: var(--gold-bg); }
+  .badge-blue  { color: var(--accent);border-color: #b8ccf4; background: var(--accent-light); }
+  .badge-grey  { color: var(--muted); border-color: var(--border2); background: var(--surface2); }
+
+  /* ── NEWS EDITOR ── */
+  .news-item-row {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 4px; padding: 14px 16px; margin-bottom: 10px;
+  }
+  .news-item-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 8px;
+  }
+  .news-item-tool { font-weight: 700; font-size: 14px; }
+  .news-item-date { font-size: 11px; color: var(--light); }
+  .news-item-text { font-size: 13px; color: var(--muted); line-height: 1.55; }
+  .news-item-actions { display: flex; gap: 6px; margin-top: 10px; }
+
+  /* ── SOURCES CONFIG ── */
+  .source-config-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 5px; padding: 18px 20px; margin-bottom: 12px;
+  }
+  .source-config-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px;
+  }
+  .source-config-name { font-weight: 700; font-size: 14px; }
+  .source-config-handle { font-size: 12px; color: var(--muted); margin-left: 6px; }
+
+  /* ── CRON INFO ── */
+  .cron-box {
+    background: #1a1a18; color: #d0d0c0;
+    border-radius: 5px; padding: 16px 20px;
+    font-family: 'Courier New', monospace; font-size: 13px;
+    line-height: 1.7; margin: 12px 0;
+    overflow-x: auto; white-space: pre;
+  }
+  .cron-box .comment { color: #6a6a58; }
+  .cron-box .keyword { color: #7a9fff; }
+  .cron-box .value   { color: #7adfaa; }
+
+  /* ── LOG VIEWER ── */
+  .log-box {
+    background: #1a1a18; color: #c8c8b8;
+    border-radius: 5px; padding: 16px 20px;
+    font-family: 'Courier New', monospace; font-size: 12px;
+    line-height: 1.8; max-height: 400px; overflow-y: auto;
+    margin: 12px 0;
+  }
+  .log-info  { color: #7adfaa; }
+  .log-warn  { color: #ffd080; }
+  .log-error { color: #ff8080; }
+  .log-time  { color: #6a8a6a; }
+
+  /* ── ALERT ── */
+  .alert {
+    padding: 12px 16px; border-radius: 4px;
+    border: 1px solid; font-size: 13px; margin-bottom: 16px;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .alert-info  { background: var(--accent-light); border-color: #c0d0f0; color: var(--accent); }
+  .alert-success{ background: var(--green-bg); border-color: #a0d8b8; color: var(--green); }
+  .alert-warn  { background: var(--gold-bg); border-color: #f0d060; color: var(--gold); }
+  .alert-error { background: var(--red-bg); border-color: #f0b0a8; color: var(--red); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px; background: var(--border);
+    margin: 24px 0;
+  }
+
+  /* ── PROGRESS ── */
+  .progress-bar {
+    height: 6px; background: var(--surface3);
+    border-radius: 3px; overflow: hidden; margin-top: 4px;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 3px;
+    transition: width 0.4s;
+  }
+
+  /* ── TOAST ── */
+  #toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--text); color: #fff;
+    padding: 12px 18px; border-radius: 5px;
+    font-size: 13px; font-weight: 500;
+    opacity: 0; transform: translateY(8px);
+    transition: all 0.2s; pointer-events: none;
+    z-index: 9999;
+  }
+  #toast.show { opacity: 1; transform: none; }
+
+  @media (max-width: 900px) {
+    .admin-body { grid-template-columns: 1fr; }
+    .sidebar { border-right: none; border-bottom: 1px solid var(--border); padding: 12px 0; }
+    .sidebar-item { padding: 8px 16px; }
+    nav, .admin-header, .content-area { padding-left: 20px; padding-right: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo-area">
+      <a href="index.html" class="logo-text">Veille IA</a>
+      <span class="logo-divider">|</span>
+      <span class="logo-sub">Administration</span>
+    </div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">🗂 Outils</a>
+      <a href="nouveautes.html" class="nav-link">🗞 Nouveautés</a>
+      <a href="admin.html" class="nav-link active">⚙️ Admin</a>
+    </div>
+  </div>
+</nav>
+
+<div class="admin-header">
+  <div>
+    <div class="admin-title">Tableau de bord <span>Administration</span></div>
+    <div class="admin-subtitle" id="admin-subtitle">Gestion de la veille IA pédagogique</div>
+  </div>
+  <div class="admin-header-actions">
+    <span id="header-update-info" style="font-size:12px;color:var(--muted)"></span>
+    <button class="btn btn-primary" onclick="showPanel('run')">▶ Lancer une mise à jour</button>
+  </div>
+</div>
+
+<div class="admin-body">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Vue d'ensemble</div>
+      <div class="sidebar-item active" onclick="showPanel('dashboard')" id="nav-dashboard">
+        <span class="si-icon">📊</span> Tableau de bord
+      </div>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Contenu</div>
+      <div class="sidebar-item" onclick="showPanel('news-editor')" id="nav-news-editor">
+        <span class="si-icon">🗞</span> Gérer les actualités
+      </div>
+      <div class="sidebar-item" onclick="showPanel('tools-list')" id="nav-tools-list">
+        <span class="si-icon">🗂</span> Outils référencés
+      </div>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Automatisation</div>
+      <div class="sidebar-item" onclick="showPanel('sources')" id="nav-sources">
+        <span class="si-icon">📡</span> Sources de veille
+      </div>
+      <div class="sidebar-item" onclick="showPanel('run')" id="nav-run">
+        <span class="si-icon">▶</span> Lancer / Planifier
+      </div>
+      <div class="sidebar-item" onclick="showPanel('email')" id="nav-email">
+        <span class="si-icon">📧</span> Configuration e-mail
+      </div>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Outils</div>
+      <div class="sidebar-item" onclick="showPanel('add-news')" id="nav-add-news">
+        <span class="si-icon">✏️</span> Ajouter une actualité
+      </div>
+      <div class="sidebar-item" onclick="showPanel('add-tool')" id="nav-add-tool">
+        <span class="si-icon">➕</span> Ajouter un outil
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content-area">
+
+    <!-- ═══ DASHBOARD ═══ -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="section-title">Vue d'ensemble</div>
+      <div class="section-desc">État actuel de ta veille IA pédagogique.</div>
+
+      <div class="stats-grid">
+        <div class="stat-card green">
+          <div class="stat-card-value" id="ds-tools">—</div>
+          <div class="stat-card-label">Outils référencés</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-card-value" id="ds-news">—</div>
+          <div class="stat-card-label">Actualités totales</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-card-value" id="ds-tools-with-news">—</div>
+          <div class="stat-card-label">Outils avec actu</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-value" id="ds-sources">3</div>
+          <div class="stat-card-label">Sources actives</div>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-bottom:12px">Répartition des actualités par outil</div>
+      <div id="news-breakdown"></div>
+
+      <div class="divider"></div>
+
+      <div class="section-title" style="margin-bottom:12px">Dernière mise à jour</div>
+      <div class="alert alert-info" id="last-update-alert">
+        <span>ℹ️</span>
+        <span id="last-update-text">Chargement…</span>
+      </div>
+
+      <div class="alert alert-warn">
+        <span>⚠️</span>
+        <span>Le script de mise à jour automatique doit être configuré sur ton serveur.
+        <a href="#" onclick="showPanel('run');return false" style="color:inherit;font-weight:600">
+        Voir les instructions →</a></span>
+      </div>
+    </div>
+
+    <!-- ═══ NEWS EDITOR ═══ -->
+    <div class="panel" id="panel-news-editor">
+      <div class="section-title">Gérer les actualités</div>
+      <div class="section-desc">
+        Consulte, modifie et supprime les actualités stockées dans <code>news.json</code>.
+        Toute modification est sauvegardée localement — recopie ensuite le JSON sur ton serveur.
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:16px;align-items:center;flex-wrap:wrap">
+        <input type="text" class="form-input" id="news-search" placeholder="Rechercher un outil…"
+               style="max-width:260px" oninput="filterNewsEditor()">
+        <button class="btn btn-success btn-sm" onclick="showPanel('add-news')">+ Ajouter une actualité</button>
+        <button class="btn btn-secondary btn-sm" onclick="exportNewsJson()">⬇ Exporter news.json</button>
+      </div>
+
+      <div id="news-editor-list">
+        <div style="color:var(--muted);font-size:13px;padding:20px 0">Chargement…</div>
+      </div>
+    </div>
+
+    <!-- ═══ TOOLS LIST ═══ -->
+    <div class="panel" id="panel-tools-list">
+      <div class="section-title">Outils référencés</div>
+      <div class="section-desc">
+        Liste de tous les outils IA dans ton tableau de bord. Les outils avec une actualité
+        sont marqués <span class="badge badge-gold">ACTU</span>.
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Outil</th>
+            <th>Catégorie</th>
+            <th>Tarif</th>
+            <th>Actualités</th>
+            <th>Statut</th>
+          </tr>
+        </thead>
+        <tbody id="tools-table-body">
+          <tr><td colspan="5" style="color:var(--muted);text-align:center;padding:24px">Chargement…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ SOURCES ═══ -->
+    <div class="panel" id="panel-sources">
+      <div class="section-title">Sources de veille</div>
+      <div class="section-desc">
+        Sites des créateurs de contenu IA que le script scrape automatiquement chaque semaine.
+        Pour ajouter ou modifier une source, édite directement <code>veille_ia_updater.py</code>.
+      </div>
+
+      <div class="source-config-card">
+        <div class="source-config-header">
+          <div>
+            <span class="source-config-name">📱 Gabzer</span>
+            <span class="source-config-handle">Gabriel Sagnet · gabzer.fr</span>
+          </div>
+          <span class="badge badge-green">Actif</span>
+        </div>
+        <div class="form-row">
+          <div class="form-group" style="margin:0">
+            <div class="form-label">URL scrapée</div>
+            <input type="text" class="form-input" value="https://gabzer.fr/" readonly>
+          </div>
+          <div class="form-group" style="margin:0">
+            <div class="form-label">Description</div>
+            <input type="text" class="form-input" value="Vidéaste tech & IA — 1M+ abonnés" readonly>
+          </div>
+        </div>
+      </div>
+
+      <div class="source-config-card">
+        <div class="source-config-header">
+          <div>
+            <span class="source-config-name">⚡ Superproductif</span>
+            <span class="source-config-handle">Jérémy Guillo & Brice Trophardy</span>
+          </div>
+          <span class="badge badge-green">Actif</span>
+        </div>
+        <div class="form-row">
+          <div class="form-group" style="margin:0">
+            <div class="form-label">URL scrapée</div>
+            <input type="text" class="form-input" value="https://newsletter.superproductif.fr/" readonly>
+          </div>
+          <div class="form-group" style="margin:0">
+            <div class="form-label">Description</div>
+            <input type="text" class="form-input" value="Newsletter IA hebdomadaire — 45k abonnés" readonly>
+          </div>
+        </div>
+      </div>
+
+      <div class="source-config-card">
+        <div class="source-config-header">
+          <div>
+            <span class="source-config-name">🎨 Mathieu Ibanez</span>
+            <span class="source-config-handle">Expert IA créative · web.mathieuibanez.com</span>
+          </div>
+          <span class="badge badge-green">Actif</span>
+        </div>
+        <div class="form-row">
+          <div class="form-group" style="margin:0">
+            <div class="form-label">URL scrapée</div>
+            <input type="text" class="form-input" value="https://web.mathieuibanez.com/" readonly>
+          </div>
+          <div class="form-group" style="margin:0">
+            <div class="form-label">Description</div>
+            <input type="text" class="form-input" value="Expert Midjourney, vidéo IA, bibliothèque Ultima" readonly>
+          </div>
+        </div>
+      </div>
+
+      <div class="source-config-card" style="border-style:dashed;border-color:var(--border2);background:var(--surface2)">
+        <div class="source-config-header">
+          <div>
+            <span class="source-config-name" style="color:var(--muted)">➕ Ajouter une source</span>
+          </div>
+        </div>
+        <div class="alert alert-info" style="margin:0">
+          <span>ℹ️</span>
+          <span>Pour ajouter une nouvelle source, ouvre <code>veille_ia_updater.py</code>
+          et ajoute un entrée dans la liste <code>CREATOR_SOURCES</code>.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ RUN / PLANIFIER ═══ -->
+    <div class="panel" id="panel-run">
+      <div class="section-title">Lancer & planifier la mise à jour</div>
+      <div class="section-desc">
+        Instructions pour exécuter le script manuellement ou automatiquement via cron.
+      </div>
+
+      <div class="alert alert-info">
+        <span>ℹ️</span>
+        <span>La mise à jour automatique nécessite Python 3.8+ sur ton serveur et la clé API Anthropic.
+        <strong>Coût estimé : ~0.05€ par exécution.</strong></span>
+      </div>
+
+      <div class="section-title" style="font-size:1rem;margin:20px 0 8px">
+        1. Tester manuellement
+      </div>
+      <div class="cron-box"><span class="comment"># Exécution manuelle du script</span>
+<span class="keyword">python3</span> <span class="value">veille_ia_updater.py</span>
+
+<span class="comment"># Avec les variables d'environnement</span>
+<span class="keyword">ANTHROPIC_API_KEY</span>=sk-ant-xxx \
+<span class="keyword">SMTP_USER</span>=ton@email.fr \
+<span class="keyword">SMTP_PASSWORD</span>=motdepasse \
+<span class="keyword">EMAIL_TO</span>=toi@email.fr \
+<span class="keyword">python3</span> <span class="value">veille_ia_updater.py</span></div>
+
+      <div class="section-title" style="font-size:1rem;margin:20px 0 8px">
+        2. Automatiser avec cron (Linux/Mac)
+      </div>
+      <div class="cron-box"><span class="comment"># Ouvrir le crontab</span>
+<span class="keyword">crontab</span> -e
+
+<span class="comment"># Exécution tous les lundis à 8h00</span>
+<span class="value">0 8 * * 1</span> /usr/bin/python3 /chemin/vers/veille_ia_updater.py >> /var/log/veille_ia.log 2>&1
+
+<span class="comment"># Avec rsync pour copier news.json sur le serveur web</span>
+<span class="value">0 8 * * 1</span> /usr/bin/python3 /chemin/vers/veille_ia_updater.py && \
+  rsync -av /chemin/vers/news.json user@serveur.fr:/var/www/html/veille-ia/ >> /var/log/veille_ia.log 2>&1</div>
+
+      <div class="section-title" style="font-size:1rem;margin:20px 0 8px">
+        3. Via GitHub Actions (si hébergé sur GitHub Pages)
+      </div>
+      <div class="cron-box"><span class="comment"># .github/workflows/veille-ia.yml</span>
+<span class="keyword">name:</span> <span class="value">Veille IA Hebdomadaire</span>
+<span class="keyword">on:</span>
+  <span class="keyword">schedule:</span>
+    - <span class="keyword">cron:</span> <span class="value">'0 8 * * 1'</span>
+  <span class="keyword">workflow_dispatch:</span>   <span class="comment"># Bouton manuel dans GitHub</span>
+
+<span class="keyword">jobs:</span>
+  <span class="keyword">update:</span>
+    <span class="keyword">runs-on:</span> <span class="value">ubuntu-latest</span>
+    <span class="keyword">steps:</span>
+      - <span class="keyword">uses:</span> <span class="value">actions/checkout@v4</span>
+      - <span class="keyword">name:</span> <span class="value">Run updater</span>
+        <span class="keyword">env:</span>
+          <span class="keyword">ANTHROPIC_API_KEY:</span> <span class="value">${{ secrets.ANTHROPIC_API_KEY }}</span>
+          <span class="keyword">SMTP_USER:</span> <span class="value">${{ secrets.SMTP_USER }}</span>
+          <span class="keyword">SMTP_PASSWORD:</span> <span class="value">${{ secrets.SMTP_PASSWORD }}</span>
+          <span class="keyword">EMAIL_TO:</span> <span class="value">${{ secrets.EMAIL_TO }}</span>
+        <span class="keyword">run:</span> <span class="value">pip install anthropic requests beautifulsoup4 && python3 veille_ia_updater.py</span>
+      - <span class="keyword">uses:</span> <span class="value">stefanzweifel/git-auto-commit-action@v5</span>
+        <span class="keyword">with:</span>
+          <span class="keyword">commit_message:</span> <span class="value">'🗞 Mise à jour automatique veille IA'</span></div>
+
+      <div class="alert alert-success" style="margin-top:16px">
+        <span>✅</span>
+        <span>La méthode GitHub Actions est recommandée si ton site est hébergé sur GitHub Pages
+        — c'est gratuit, fiable, et tu peux déclencher une mise à jour manuelle en 1 clic.</span>
+      </div>
+    </div>
+
+    <!-- ═══ EMAIL ═══ -->
+    <div class="panel" id="panel-email">
+      <div class="section-title">Configuration de l'e-mail</div>
+      <div class="section-desc">
+        Variables à configurer dans <code>veille_ia_updater.py</code> ou comme variables d'environnement.
+      </div>
+
+      <div class="alert alert-warn">
+        <span>⚠️</span>
+        <span>Ces paramètres sont affichés à titre de référence uniquement.
+        Pour les modifier, édite directement le fichier Python ou les secrets de ton serveur/GitHub.</span>
+      </div>
+
+      <div class="form-row" style="margin-bottom:16px">
+        <div class="form-group">
+          <div class="form-label">Serveur SMTP</div>
+          <input type="text" class="form-input" value="smtp.gmail.com" readonly>
+          <div class="form-hint">Pour Outlook : smtp-mail.outlook.com · Port 587</div>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Port SMTP</div>
+          <input type="text" class="form-input" value="587 (STARTTLS)" readonly>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-label">Variable d'environnement EMAIL_TO</div>
+        <input type="text" class="form-input" placeholder="toi@exemple.fr,collegue@exemple.fr" readonly>
+        <div class="form-hint">Plusieurs adresses séparées par des virgules</div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-label">Fréquence d'envoi</div>
+        <select class="form-select" disabled>
+          <option selected>Chaque lundi matin (recommandé)</option>
+          <option>Deux fois par semaine</option>
+          <option>Quotidien</option>
+        </select>
+        <div class="form-hint">Modifie la règle cron pour changer la fréquence</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="section-title" style="font-size:1rem;margin-bottom:8px">
+        Mot de passe d'application Gmail
+      </div>
+      <div class="cron-box"><span class="comment"># Gmail requiert un mot de passe d'APPLICATION (pas ton mot de passe Google)</span>
+1. Va sur <span class="value">myaccount.google.com/security</span>
+2. Active la <span class="value">validation en 2 étapes</span>
+3. Cherche <span class="value">"Mots de passe des applications"</span>
+4. Génère un mot de passe pour <span class="value">"Messagerie"</span>
+5. Utilise ce code de 16 caractères comme <span class="keyword">SMTP_PASSWORD</span></div>
+    </div>
+
+    <!-- ═══ ADD NEWS ═══ -->
+    <div class="panel" id="panel-add-news">
+      <div class="section-title">Ajouter une actualité manuellement</div>
+      <div class="section-desc">
+        Ajoute une actualité sur un outil — elle apparaîtra immédiatement dans le tableau et la page Nouveautés.
+      </div>
+
+      <div class="form-group">
+        <div class="form-label">Outil concerné</div>
+        <select class="form-select" id="add-news-tool">
+          <option value="">— Choisir un outil —</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <div class="form-label">Date</div>
+          <input type="text" class="form-input" id="add-news-date" placeholder="ex : 21 mars 2026">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Source</div>
+          <select class="form-select" id="add-news-source">
+            <option value="">Veille Claude IA</option>
+            <option value="via Gabzer">Via Gabzer</option>
+            <option value="via Superproductif">Via Superproductif</option>
+            <option value="via Mathieu Ibanez">Via Mathieu Ibanez</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Texte de l'actualité</div>
+        <textarea class="form-textarea" id="add-news-text"
+                  placeholder="Décris la nouveauté en 2-3 phrases claires, accessibles à des étudiants…"></textarea>
+        <div class="form-hint">2-3 phrases max. Sois factuel et concis.</div>
+      </div>
+
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn btn-primary" onclick="addNewsItem()">✓ Ajouter l'actualité</button>
+        <button class="btn btn-secondary" onclick="showPanel('news-editor')">Annuler</button>
+        <span id="add-news-feedback" style="font-size:12px;color:var(--green)"></span>
+      </div>
+    </div>
+
+    <!-- ═══ ADD TOOL ═══ -->
+    <div class="panel" id="panel-add-tool">
+      <div class="section-title">Ajouter un outil IA</div>
+      <div class="section-desc">
+        Génère le code JSON à copier-coller dans la section <code>BASE_TOOLS</code> de <code>index.html</code>.
+      </div>
+
+      <div class="alert alert-info">
+        <span>ℹ️</span>
+        <span>Remplis le formulaire ci-dessous, copie le code généré, et colle-le dans le tableau
+        <code>BASE_TOOLS</code> de <code>index.html</code> avant la ligne <code>];</code>.</span>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <div class="form-label">Nom de l'outil</div>
+          <input type="text" class="form-input" id="nt-name" placeholder="ex : Perplexity AI" oninput="generateToolCode()">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Emoji icône</div>
+          <input type="text" class="form-input" id="nt-icon" placeholder="🔍" maxlength="4" oninput="generateToolCode()">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <div class="form-label">Catégorie</div>
+          <select class="form-select" id="nt-cat" onchange="generateToolCode()">
+            <option>Assistant IA</option>
+            <option>Image / Design</option>
+            <option>Musique / Audio</option>
+            <option>Vidéo</option>
+            <option>Texte / Rédaction</option>
+            <option>Code</option>
+            <option>Présentations</option>
+            <option>Recherche / Analyse</option>
+            <option>Avatars / Voix</option>
+            <option>Design / No-code</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Tarif</div>
+          <select class="form-select" id="nt-price" onchange="generateToolCode()">
+            <option value="free">Gratuit</option>
+            <option value="freemium" selected>Freemium</option>
+            <option value="paid">Payant</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <div class="form-label">URL de l'outil</div>
+          <input type="text" class="form-input" id="nt-url" placeholder="https://…" oninput="generateToolCode()">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Tagline (une ligne)</div>
+          <input type="text" class="form-input" id="nt-tagline" placeholder="Ce que fait l'outil en une phrase" oninput="generateToolCode()">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Description courte</div>
+        <textarea class="form-textarea" id="nt-desc" placeholder="2-3 phrases de description complète…" oninput="generateToolCode()"></textarea>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Détail tarifaire</div>
+        <input type="text" class="form-input" id="nt-price-detail" placeholder="ex : Gratuit (20 req/jour) | Pro : 15$/mois" oninput="generateToolCode()">
+      </div>
+
+      <div class="form-group">
+        <div class="form-label">Code généré — à copier dans index.html</div>
+        <textarea class="form-textarea" id="nt-output" style="min-height:200px;font-family:monospace;font-size:12px;background:#1a1a18;color:#c8c8b8;border-color:#333" readonly></textarea>
+      </div>
+      <button class="btn btn-primary" onclick="copyToolCode()">📋 Copier le code</button>
+    </div>
+
+  </div><!-- end content-area -->
+</div><!-- end admin-body -->
+
+<div id="toast"></div>
+
+<script>
+// ── State ────────────────────────────────────────────────────────────────────
+let NEWS_DATA = {};
+let LAST_UPDATE = "—";
+
+const TOOLS_LIST = [
+  {name:"ChatGPT",cat:"Assistant IA",price:"freemium"},
+  {name:"Claude",cat:"Assistant IA",price:"freemium"},
+  {name:"Gemini",cat:"Assistant IA",price:"freemium"},
+  {name:"Le Chat (Mistral)",cat:"Assistant IA",price:"freemium"},
+  {name:"Midjourney",cat:"Image / Design",price:"paid"},
+  {name:"DALL·E / GPT Image",cat:"Image / Design",price:"freemium"},
+  {name:"Adobe Firefly",cat:"Image / Design",price:"freemium"},
+  {name:"Canva AI",cat:"Image / Design",price:"freemium"},
+  {name:"Ideogram AI",cat:"Image / Design",price:"freemium"},
+  {name:"Suno AI",cat:"Musique / Audio",price:"freemium"},
+  {name:"Udio",cat:"Musique / Audio",price:"freemium"},
+  {name:"ElevenLabs",cat:"Musique / Audio",price:"freemium"},
+  {name:"Soundraw",cat:"Musique / Audio",price:"paid"},
+  {name:"Runway Gen-4.5",cat:"Vidéo",price:"freemium"},
+  {name:"Sora (OpenAI)",cat:"Vidéo",price:"paid"},
+  {name:"HeyGen",cat:"Vidéo",price:"freemium"},
+  {name:"Veo 3 (Google)",cat:"Vidéo",price:"paid"},
+  {name:"Descript",cat:"Vidéo",price:"freemium"},
+  {name:"Notion AI",cat:"Texte / Rédaction",price:"paid"},
+  {name:"Grammarly",cat:"Texte / Rédaction",price:"freemium"},
+  {name:"Copy.ai",cat:"Texte / Rédaction",price:"freemium"},
+  {name:"GitHub Copilot",cat:"Code",price:"freemium"},
+  {name:"Cursor",cat:"Code",price:"freemium"},
+  {name:"Replit AI",cat:"Code",price:"freemium"},
+  {name:"Lovable",cat:"Code",price:"freemium"},
+  {name:"Gamma",cat:"Présentations",price:"freemium"},
+  {name:"Beautiful.ai",cat:"Présentations",price:"paid"},
+  {name:"Napkin AI",cat:"Présentations",price:"freemium"},
+  {name:"Perplexity AI",cat:"Recherche / Analyse",price:"freemium"},
+  {name:"NotebookLM",cat:"Recherche / Analyse",price:"free"},
+  {name:"Consensus",cat:"Recherche / Analyse",price:"freemium"},
+  {name:"D-ID",cat:"Avatars / Voix",price:"freemium"},
+  {name:"Murf AI",cat:"Avatars / Voix",price:"freemium"},
+  {name:"Framer AI",cat:"Design / No-code",price:"freemium"},
+];
+
+// ── Panel navigation ─────────────────────────────────────────────────────────
+function showPanel(id) {
+  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".sidebar-item").forEach(s => s.classList.remove("active"));
+  document.getElementById("panel-" + id).classList.add("active");
+  const nav = document.getElementById("nav-" + id);
+  if (nav) nav.classList.add("active");
+}
+
+// ── Toast ────────────────────────────────────────────────────────────────────
+function showToast(msg, duration = 2500) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), duration);
+}
+
+// ── Load news.json ───────────────────────────────────────────────────────────
+async function loadNews() {
+  try {
+    const r = await fetch("news.json?t=" + Date.now());
+    if (!r.ok) throw new Error();
+    const data = await r.json();
+    NEWS_DATA   = data.news || {};
+    LAST_UPDATE = data.lastUpdate || "—";
+    renderDashboard();
+    renderNewsEditor();
+    renderToolsTable();
+    renderAddNewsToolSelect();
+    document.getElementById("header-update-info").textContent =
+      "Dernière MAJ : " + LAST_UPDATE;
+  } catch(e) {
+    document.getElementById("last-update-text").textContent =
+      "Impossible de charger news.json — vérifiez que le fichier est dans le même dossier.";
+  }
+}
+
+// ── Dashboard ────────────────────────────────────────────────────────────────
+function renderDashboard() {
+  const totalNews  = Object.values(NEWS_DATA).reduce((a,b) => a + b.length, 0);
+  const toolsWithNews = Object.keys(NEWS_DATA).filter(k => NEWS_DATA[k].length > 0).length;
+  document.getElementById("ds-tools").textContent = TOOLS_LIST.length;
+  document.getElementById("ds-news").textContent  = totalNews;
+  document.getElementById("ds-tools-with-news").textContent = toolsWithNews;
+  document.getElementById("last-update-text").textContent =
+    "Dernière mise à jour : " + LAST_UPDATE +
+    " · " + totalNews + " actualité(s) sur " + toolsWithNews + " outil(s).";
+
+  // Breakdown bars
+  const breakdown = document.getElementById("news-breakdown");
+  const entries = Object.entries(NEWS_DATA)
+    .filter(([,v]) => v.length > 0)
+    .sort((a,b) => b[1].length - a[1].length);
+
+  if (entries.length === 0) {
+    breakdown.innerHTML = `<div style="color:var(--muted);font-size:13px">Aucune actualité pour l'instant.</div>`;
+    return;
+  }
+
+  const max = Math.max(...entries.map(([,v]) => v.length));
+  breakdown.innerHTML = entries.map(([tool, items]) => `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+      <div style="width:160px;font-size:12px;font-weight:600;text-align:right;
+                  white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${tool}</div>
+      <div style="flex:1">
+        <div class="progress-bar">
+          <div class="progress-fill" style="width:${(items.length/max)*100}%;background:var(--accent)"></div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);width:20px;text-align:right">${items.length}</div>
+    </div>`).join("");
+}
+
+// ── News Editor ──────────────────────────────────────────────────────────────
+let newsEditorFilter = "";
+function filterNewsEditor() {
+  newsEditorFilter = document.getElementById("news-search").value.toLowerCase();
+  renderNewsEditor();
+}
+
+function renderNewsEditor() {
+  const container = document.getElementById("news-editor-list");
+  const entries = Object.entries(NEWS_DATA)
+    .filter(([tool]) => !newsEditorFilter || tool.toLowerCase().includes(newsEditorFilter))
+    .sort((a,b) => a[0].localeCompare(b[0]));
+
+  if (entries.length === 0) {
+    container.innerHTML = `<div style="color:var(--muted);font-size:13px;padding:20px 0">
+      ${newsEditorFilter ? "Aucun outil trouvé." : "Aucune actualité dans news.json."}</div>`;
+    return;
+  }
+
+  container.innerHTML = entries.map(([tool, items]) =>
+    items.map((item, idx) => `
+      <div class="news-item-row">
+        <div class="news-item-header">
+          <div>
+            <span class="news-item-tool">${tool}</span>
+            <span class="badge badge-grey" style="margin-left:8px">${item.date || "—"}</span>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-danger btn-sm" onclick="deleteNewsItem('${tool}',${idx})">
+              🗑 Supprimer
+            </button>
+          </div>
+        </div>
+        <div class="news-item-text">${item.text}</div>
+      </div>`).join("")
+  ).join("");
+}
+
+function deleteNewsItem(tool, idx) {
+  if (!NEWS_DATA[tool]) return;
+  NEWS_DATA[tool].splice(idx, 1);
+  if (NEWS_DATA[tool].length === 0) delete NEWS_DATA[tool];
+  renderNewsEditor();
+  renderDashboard();
+  showToast("✓ Actualité supprimée — pense à exporter le JSON");
+}
+
+function exportNewsJson() {
+  const data = { lastUpdate: LAST_UPDATE, news: NEWS_DATA };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const a    = document.createElement("a");
+  a.href     = URL.createObjectURL(blob);
+  a.download = "news.json";
+  a.click();
+  showToast("⬇ news.json téléchargé — dépose-le sur ton serveur");
+}
+
+// ── Tools Table ──────────────────────────────────────────────────────────────
+function renderToolsTable() {
+  const tbody = document.getElementById("tools-table-body");
+  const priceMap = { free:"Gratuit", freemium:"Freemium", paid:"Payant" };
+  const badgeMap = {
+    free:`<span class="badge badge-green">Gratuit</span>`,
+    freemium:`<span class="badge badge-gold">Freemium</span>`,
+    paid:`<span class="badge badge-red">Payant</span>`,
+  };
+  tbody.innerHTML = TOOLS_LIST.map(t => {
+    const n = (NEWS_DATA[t.name] || []).length;
+    return `<tr>
+      <td style="font-weight:600">${t.name}</td>
+      <td style="color:var(--muted)">${t.cat}</td>
+      <td>${badgeMap[t.price]||t.price}</td>
+      <td>${n > 0 ? `<span class="badge badge-gold">${n} actu</span>` : '<span style="color:var(--light);font-size:12px">—</span>'}</td>
+      <td><span class="badge badge-green">Actif</span></td>
+    </tr>`;
+  }).join("");
+}
+
+// ── Add News ─────────────────────────────────────────────────────────────────
+function renderAddNewsToolSelect() {
+  const sel = document.getElementById("add-news-tool");
+  sel.innerHTML = `<option value="">— Choisir un outil —</option>` +
+    TOOLS_LIST.map(t => `<option value="${t.name}">${t.name}</option>`).join("");
+  // Pre-fill date
+  const today = new Date();
+  document.getElementById("add-news-date").value =
+    today.toLocaleDateString("fr-FR", { day:"numeric", month:"long", year:"numeric" });
+}
+
+function addNewsItem() {
+  const tool   = document.getElementById("add-news-tool").value;
+  const date   = document.getElementById("add-news-date").value.trim();
+  const text   = document.getElementById("add-news-text").value.trim();
+  const src    = document.getElementById("add-news-source").value;
+  const fb     = document.getElementById("add-news-feedback");
+
+  if (!tool) { fb.textContent = "⚠ Choisis un outil."; fb.style.color="var(--red)"; return; }
+  if (!text) { fb.textContent = "⚠ Le texte est vide."; fb.style.color="var(--red)"; return; }
+
+  const fullText = text + (src ? ` (${src})` : "");
+  if (!NEWS_DATA[tool]) NEWS_DATA[tool] = [];
+  NEWS_DATA[tool].unshift({ date, text: fullText });
+
+  // Reset form
+  document.getElementById("add-news-text").value = "";
+  document.getElementById("add-news-source").value = "";
+  fb.style.color = "var(--green)";
+  fb.textContent = "✓ Ajouté ! N'oublie pas d'exporter le JSON.";
+  setTimeout(() => { fb.textContent = ""; }, 4000);
+
+  renderDashboard();
+  renderNewsEditor();
+  showToast("✓ Actualité ajoutée — exporte le JSON pour la déployer");
+}
+
+// ── Add Tool Code Generator ──────────────────────────────────────────────────
+function generateToolCode() {
+  const name  = document.getElementById("nt-name").value || "Nom de l'outil";
+  const icon  = document.getElementById("nt-icon").value || "🔧";
+  const cat   = document.getElementById("nt-cat").value;
+  const price = document.getElementById("nt-price").value;
+  const url   = document.getElementById("nt-url").value || "https://...";
+  const tag   = document.getElementById("nt-tagline").value || "Tagline courte";
+  const desc  = document.getElementById("nt-desc").value || "Description.";
+  const pd    = document.getElementById("nt-price-detail").value || "Gratuit | Pro : x$/mois";
+
+  const code = `  {
+    name: "${name}", cat: "${cat}", icon: "${icon}",
+    price: "${price}", isNew: true,
+    url: "${url}",
+    tagline: "${tag}",
+    desc: "${desc}",
+    steps: [
+      { t: "Étape 1", d: "Description de l'étape 1." },
+      { t: "Étape 2", d: "Description de l'étape 2." },
+      { t: "Étape 3", d: "Description de l'étape 3." },
+      { t: "Étape 4", d: "Description de l'étape 4." },
+    ],
+    pros: ["Point fort 1", "Point fort 2", "Point fort 3"],
+    cons: ["Limite 1", "Limite 2", "Limite 3"],
+    priceDetail: "${pd}"
+  },`;
+  document.getElementById("nt-output").value = code;
+}
+
+function copyToolCode() {
+  const code = document.getElementById("nt-output").value;
+  if (!code) { showToast("⚠ Remplis d'abord le formulaire"); return; }
+  navigator.clipboard.writeText(code).then(() => showToast("✓ Code copié dans le presse-papiers"));
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+loadNews();
+generateToolCode();
+</script>
+</body>
+</html>

@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veille IA — Tableau de Bord Pédagogique 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fafaf8;
+    --surface: #ffffff;
+    --surface2: #f4f4f0;
+    --border: #e2e2dc;
+    --border2: #d0d0c8;
+    --text: #1a1a18;
+    --muted: #6b6b62;
+    --light: #9a9a90;
+    --accent: #1a4fad;
+    --accent-light: #eef2fc;
+    --red: #c0392b;
+    --green: #1a7a4a;
+    --orange: #c0620a;
+    --gold: #8a6a00;
+
+    --cat-assistant: #1a4fad;
+    --cat-image: #9b2335;
+    --cat-music: #5a3a8a;
+    --cat-video: #b84a00;
+    --cat-text: #1a6a3a;
+    --cat-code: #0a5a7a;
+    --cat-slides: #8a5a00;
+    --cat-research: #6a2a7a;
+    --cat-avatar: #8a2a4a;
+    --cat-design: #0a6a5a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--surface);
+    border-bottom: 2px solid var(--text);
+    padding: 0 48px;
+  }
+
+  .nav-links { display: flex; gap: 4px; }
+  .nav-link {
+    font-size: 13px; font-weight: 500; color: var(--muted);
+    text-decoration: none; padding: 6px 14px;
+    border-radius: 4px; border: 1px solid transparent; transition: all 0.12s;
+  }
+  .nav-link:hover { background: var(--surface2); color: var(--text); }
+  .nav-link.active { background: var(--text); color: #fff; border-color: var(--text); }
+  .nav-link.admin { border-color: var(--border2); }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 0 14px;
+    border-bottom: 1px solid var(--border);
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+
+  .logo-text {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+
+  .logo-divider { color: var(--border2); font-weight: 300; }
+
+  .logo-sub {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .update-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent-light);
+    color: var(--accent);
+    border: 1px solid #c0d0f0;
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .update-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: blink 2s infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1}50%{opacity:0.3} }
+
+  .header-main {
+    padding: 36px 0 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  h1 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.9rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: var(--text);
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .stat-row {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .stat {
+    padding: 8px 16px;
+    border-right: 1px solid var(--border2);
+    text-align: center;
+  }
+  .stat:last-child { border-right: none; }
+  .stat strong { display: block; font-size: 1.3rem; font-weight: 600; color: var(--text); line-height: 1; }
+  .stat span { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .news-count {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .news-count strong { color: var(--red); }
+
+  /* ── TOOLBAR ── */
+  .toolbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border2);
+    padding: 14px 48px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 220px;
+    max-width: 340px;
+  }
+  .search-wrap svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--light);
+    width: 15px; height: 15px;
+  }
+  #search {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 5px;
+    padding: 8px 12px 8px 36px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  #search:focus { border-color: var(--accent); background: #fff; }
+  #search::placeholder { color: var(--light); }
+
+  .filters {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.12s;
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+  }
+  .filter-btn:hover { background: var(--surface2); color: var(--text); border-color: var(--border2); }
+  .filter-btn.active {
+    background: var(--text);
+    border-color: var(--text);
+    color: #fff;
+  }
+
+  /* cat-specific active colors */
+  .filter-btn[data-cat="Assistant IA"].active { background: var(--cat-assistant); border-color: var(--cat-assistant); }
+  .filter-btn[data-cat="Image / Design"].active { background: var(--cat-image); border-color: var(--cat-image); }
+  .filter-btn[data-cat="Musique / Audio"].active { background: var(--cat-music); border-color: var(--cat-music); }
+  .filter-btn[data-cat="Vidéo"].active { background: var(--cat-video); border-color: var(--cat-video); }
+  .filter-btn[data-cat="Texte / Rédaction"].active { background: var(--cat-text); border-color: var(--cat-text); }
+  .filter-btn[data-cat="Code"].active { background: var(--cat-code); border-color: var(--cat-code); }
+  .filter-btn[data-cat="Présentations"].active { background: var(--cat-slides); border-color: var(--cat-slides); }
+  .filter-btn[data-cat="Recherche / Analyse"].active { background: var(--cat-research); border-color: var(--cat-research); }
+  .filter-btn[data-cat="Avatars / Voix"].active { background: var(--cat-avatar); border-color: var(--cat-avatar); }
+  .filter-btn[data-cat="Design / No-code"].active { background: var(--cat-design); border-color: var(--cat-design); }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 36px 48px 60px;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+
+  /* ── NEWS BANNER ── */
+  #news-banner {
+    background: #fffbeb;
+    border: 1px solid #f0d060;
+    border-left: 3px solid var(--gold);
+    border-radius: 4px;
+    padding: 14px 18px;
+    margin-bottom: 28px;
+    display: none;
+  }
+  #news-banner.has-news { display: block; }
+  .news-banner-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .news-item-line {
+    font-size: 13px;
+    color: var(--text);
+    padding: 3px 0;
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    border-bottom: 1px solid #f0e8b0;
+  }
+  .news-item-line:last-child { border-bottom: none; }
+  .news-tool-name { font-weight: 600; min-width: 100px; color: var(--accent); }
+
+  /* ── GRID ── */
+  #grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    padding: 24px 26px;
+    cursor: pointer;
+    transition: background 0.12s;
+    position: relative;
+    animation: fadeUp 0.3s ease both;
+  }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+
+  .card:hover { background: #fafaf5; }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+
+  .card-icon-name { display: flex; align-items: center; gap: 10px; }
+
+  .card-icon {
+    width: 36px; height: 36px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+  }
+
+  .card-name {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .card-badges { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+
+  .tag {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 3px;
+    border: 1px solid;
+  }
+  .tag-free { color: var(--green); border-color: #a0d8b8; background: #f0faf4; }
+  .tag-freemium { color: var(--orange); border-color: #f0c090; background: #fff7f0; }
+  .tag-paid { color: var(--red); border-color: #f0b0a8; background: #fff5f4; }
+  .tag-new { color: var(--accent); border-color: #b8ccf4; background: var(--accent-light); }
+  .tag-news { color: var(--gold); border-color: #e0c060; background: #fffbeb; font-size: 9px; }
+
+  .card-cat {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    margin-bottom: 8px;
+    margin-left: 46px;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.55;
+    margin-bottom: 14px;
+  }
+
+  /* News snippet on card */
+  .card-news {
+    background: #fffbeb;
+    border: 1px solid #f0d878;
+    border-left: 3px solid var(--gold);
+    border-radius: 3px;
+    padding: 8px 10px;
+    margin-bottom: 14px;
+    font-size: 12px;
+    color: #5a4800;
+    line-height: 1.45;
+  }
+  .card-news-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+    margin-bottom: 3px;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  .card-link {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.01em;
+  }
+  .card-link:hover { text-decoration: underline; }
+
+  .card-btn {
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .card-btn:hover { background: var(--surface2); color: var(--text); border-color: var(--text); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(20,20,16,0.5);
+    backdrop-filter: blur(3px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-top: 3px solid var(--text);
+    border-radius: 4px;
+    max-width: 700px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: translateY(12px);
+    transition: transform 0.18s;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.15);
+  }
+  .modal-overlay.open .modal { transform: none; }
+
+  .modal-inner { padding: 32px 36px; }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .modal-left { display: flex; gap: 14px; align-items: flex-start; flex: 1; }
+
+  .modal-icon {
+    width: 48px; height: 48px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .modal-title-group { flex: 1; }
+
+  .modal-name {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+
+  .modal-cat {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+
+  .modal-tagline {
+    font-size: 13px;
+    color: var(--muted);
+    font-style: italic;
+    font-family: 'Libre Baskerville', serif;
+  }
+
+  .modal-badges { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+
+  .close-btn {
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    width: 30px; height: 30px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.12s;
+    flex-shrink: 0;
+    margin-left: 16px;
+  }
+  .close-btn:hover { background: var(--surface2); color: var(--text); border-color: var(--text); }
+
+  /* Modal news section */
+  .modal-news {
+    background: #fffbeb;
+    border: 1px solid #f0d060;
+    border-left: 4px solid var(--gold);
+    border-radius: 4px;
+    padding: 14px 16px;
+    margin-bottom: 22px;
+  }
+  .modal-news-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .modal-news-item {
+    padding: 6px 0;
+    border-bottom: 1px solid #f0e8a8;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .modal-news-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .modal-news-date {
+    font-size: 10px;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .modal-section { margin-bottom: 24px; }
+
+  .modal-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .modal-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #3a3a32;
+  }
+
+  .steps { display: flex; flex-direction: column; gap: 8px; }
+
+  .step {
+    display: flex;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+
+  .step-num {
+    width: 20px; height: 20px;
+    background: var(--text);
+    color: #fff;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .step-title { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .step-text { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .step-text strong { color: var(--text); font-weight: 500; }
+
+  .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .pros-box, .cons-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 12px 14px;
+  }
+
+  .pros-box { border-top: 2px solid var(--green); }
+  .cons-box { border-top: 2px solid var(--red); }
+
+  .pros-cons-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+  .pros-box .pros-cons-title { color: var(--green); }
+  .cons-box .pros-cons-title { color: var(--red); }
+
+  .pros-cons ul { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+  .pros-cons li { font-size: 12px; color: var(--muted); display: flex; gap: 6px; align-items: flex-start; line-height: 1.4; }
+  .pros-box li::before { content: '+'; color: var(--green); font-weight: 700; flex-shrink: 0; }
+  .cons-box li::before { content: '−'; color: var(--red); font-weight: 700; flex-shrink: 0; }
+
+  .price-box {
+    background: var(--accent-light);
+    border: 1px solid #c0d0f0;
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--accent);
+  }
+
+  .modal-footer {
+    display: flex;
+    gap: 8px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn-primary {
+    flex: 1;
+    background: var(--text);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: opacity 0.12s;
+    letter-spacing: 0.02em;
+  }
+  .btn-primary:hover { opacity: 0.82; }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 18px;
+    border-radius: 4px;
+    border: 1px solid var(--border2);
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .btn-secondary:hover { background: var(--surface2); color: var(--text); }
+
+  /* empty */
+  #empty {
+    display: none;
+    text-align: center;
+    padding: 80px;
+    color: var(--muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-size: 14px;
+  }
+
+  /* footer */
+  footer {
+    text-align: center;
+    padding: 32px 48px;
+    color: var(--light);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+  footer a { color: var(--muted); }
+
+  @media (max-width: 640px) {
+    header, .toolbar, main { padding-left: 20px; padding-right: 20px; }
+    #grid { grid-template-columns: 1fr; }
+    .pros-cons { grid-template-columns: 1fr; }
+    .modal-inner { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="logo-area">
+      <span class="logo-text">Veille IA</span>
+      <span class="logo-divider">|</span>
+      <span class="logo-sub">Tableau de bord pédagogique — Licence / Bachelor</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <div class="nav-links">
+        <a href="index.html" class="nav-link active">🗂 Tous les outils</a>
+        <a href="nouveautes.html" class="nav-link">🗞 Nouveautés</a>
+        <a href="admin.html" class="nav-link admin">⚙️ Admin</a>
+      </div>
+      <div class="update-badge" id="update-badge">Mise à jour auto active</div>
+      <span id="last-update">Dernière mise à jour : —</span>
+    </div>
+  </div>
+  <div class="header-main">
+    <div>
+      <h1>Les outils IA<br>à connaître <em>en 2026</em></h1>
+    </div>
+    <div class="header-right">
+      <div class="stat-row">
+        <div class="stat"><strong id="total-count">—</strong><span>Outils</span></div>
+        <div class="stat"><strong>10</strong><span>Catégories</span></div>
+        <div class="stat"><strong id="news-count-stat">—</strong><span>Nouveautés</span></div>
+      </div>
+      <div class="news-count">
+        <strong id="news-tools-count">—</strong> outil(s) avec des actualités récentes cette semaine
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="search" placeholder="Rechercher un outil, un usage…">
+  </div>
+  <div class="filters" id="filters">
+    <button class="filter-btn active" data-cat="all">Tout</button>
+    <button class="filter-btn" data-cat="Assistant IA">🤖 Assistant</button>
+    <button class="filter-btn" data-cat="Image / Design">🖼 Image</button>
+    <button class="filter-btn" data-cat="Musique / Audio">🎵 Musique</button>
+    <button class="filter-btn" data-cat="Vidéo">🎬 Vidéo</button>
+    <button class="filter-btn" data-cat="Texte / Rédaction">✍️ Texte</button>
+    <button class="filter-btn" data-cat="Code">💻 Code</button>
+    <button class="filter-btn" data-cat="Présentations">📊 Slides</button>
+    <button class="filter-btn" data-cat="Recherche / Analyse">🔍 Recherche</button>
+    <button class="filter-btn" data-cat="Avatars / Voix">🎙 Voix</button>
+    <button class="filter-btn" data-cat="Design / No-code">🎨 Design</button>
+  </div>
+</div>
+
+<main>
+  <div id="news-banner" class="has-news" style="display:none"></div>
+
+  <div class="section-header">
+    <span class="section-label" id="results-label">Chargement…</span>
+  </div>
+
+  <div id="grid"></div>
+  <div id="empty">Aucun outil trouvé pour cette recherche.</div>
+</main>
+
+<footer>
+  Veille IA pédagogique — Licence / Bachelor &nbsp;·&nbsp; Mise à jour automatique hebdomadaire &nbsp;·&nbsp;
+  Sources : Claude AI, Perplexity, presse spécialisée
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <div class="modal-left">
+          <div class="modal-icon" id="modal-icon"></div>
+          <div class="modal-title-group">
+            <div class="modal-name" id="modal-name"></div>
+            <div class="modal-cat" id="modal-cat"></div>
+            <div class="modal-tagline" id="modal-tagline"></div>
+            <div class="modal-badges" id="modal-badges"></div>
+          </div>
+        </div>
+        <button class="close-btn" onclick="closeModal()">✕</button>
+      </div>
+
+      <!-- News section injected dynamically -->
+      <div id="modal-news-section"></div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">Description</div>
+        <div class="modal-desc" id="modal-desc"></div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">Mode d'emploi — Premiers pas</div>
+        <div class="steps" id="modal-steps"></div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">Points forts & limites</div>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-cons-title">Points forts</div>
+            <ul id="modal-pros"></ul>
+          </div>
+          <div class="cons-box">
+            <div class="pros-cons-title">Limites</div>
+            <ul id="modal-cons"></ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">Tarif</div>
+        <div class="price-box" id="modal-price"></div>
+      </div>
+
+      <div class="modal-footer">
+        <a class="btn-primary" id="modal-link" href="#" target="_blank">Accéder à l'outil →</a>
+        <button class="btn-secondary" onclick="closeModal()">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────────────
+const CAT_COLORS = {
+  "Assistant IA": "#1a4fad", "Image / Design": "#9b2335",
+  "Musique / Audio": "#5a3a8a", "Vidéo": "#b84a00",
+  "Texte / Rédaction": "#1a6a3a", "Code": "#0a5a7a",
+  "Présentations": "#8a5a00", "Recherche / Analyse": "#6a2a7a",
+  "Avatars / Voix": "#8a2a4a", "Design / No-code": "#0a6a5a",
+};
+
+// Base tools data (extended from previous version)
+const BASE_TOOLS = [
+  { name:"ChatGPT", cat:"Assistant IA", icon:"🤖", price:"freemium", isNew:false, url:"https://chat.openai.com", tagline:"L'assistant IA le plus utilisé au monde", desc:"ChatGPT est l'assistant conversationnel d'OpenAI. Il combine texte, images, voix et analyse de fichiers. Basé sur GPT-5, il excelle dans la rédaction, le code, l'analyse de documents et la création d'images.", steps:[{t:"Créer un compte",d:"Rends-toi sur <strong>chat.openai.com</strong> et crée un compte gratuit."},{t:"Poser une question",d:"Décris clairement ta demande : <strong>« Explique-moi la différence entre une API REST et GraphQL »</strong>"},{t:"Joindre un fichier",d:"Clique sur le <strong>trombone 📎</strong> pour importer un PDF, image ou Excel."},{t:"Générer une image",d:"Tape : <strong>« Génère une image de… »</strong> — 2-3 images/jour en gratuit."}], pros:["Polyvalent (texte, image, voix, fichiers)","900M+ utilisateurs, communauté immense","Version gratuite généreuse"], cons:["Hallucinations possibles","Pas toujours à jour sur l'actualité","Version avancée payante (20$/mois)"], priceDetail:"Gratuit (GPT-5.3) | ChatGPT Plus : 20$/mois" },
+  { name:"Claude", cat:"Assistant IA", icon:"🧠", price:"freemium", isNew:false, url:"https://claude.ai", tagline:"Le meilleur pour la rédaction et l'analyse longue", desc:"Claude est l'assistant IA d'Anthropic, reconnu comme le modèle le plus fort pour la rédaction et l'analyse de documents longs. Il peut traiter des fichiers de plusieurs centaines de pages en une fois.", steps:[{t:"Accéder à Claude",d:"Va sur <strong>claude.ai</strong> et crée un compte gratuit."},{t:"Analyse de document",d:"Glisse un <strong>PDF ou Word</strong> — Claude lit, résume et répond à tes questions."},{t:"Rédaction longue",d:"Donne des instructions précises : <strong>« Écris un rapport de 1500 mots sur [sujet] »</strong>"},{t:"Itérer",d:"Demande des améliorations : <strong>« Rends le ton plus académique »</strong>"}], pros:["Excellent pour textes longs et nuancés","Très fort en analyse","Mémorisation du contexte"], cons:["Moins de multimédia que ChatGPT","Pas de génération d'image native","Limites de messages en gratuit"], priceDetail:"Gratuit (Claude Sonnet 4.6) | Claude Pro : 20$/mois" },
+  { name:"Gemini", cat:"Assistant IA", icon:"♊", price:"freemium", isNew:false, url:"https://gemini.google.com", tagline:"L'IA Google — parfaite avec l'écosystème Google", desc:"Gemini est l'assistant IA de Google, intégrant nativement Gmail, Drive, Docs et Sheets. Il dispose d'une fonctionnalité Deep Research pour des analyses approfondies sourcées.", steps:[{t:"Se connecter",d:"Utilise ton <strong>compte Google</strong> sur gemini.google.com."},{t:"Fouiller ton Drive",d:"Connecte Google Drive et demande : <strong>« Résume le document [titre] »</strong>"},{t:"Deep Research",d:"Active <strong>Deep Research</strong> pour un rapport sourcé en quelques minutes."},{t:"Mode audio",d:"Génère un <strong>résumé podcast</strong> de n'importe quel document."}], pros:["Intégration native Google (Drive, Gmail)","Deep Research très puissant","Multimodal (image, audio, texte)"], cons:["Moins fort que Claude en rédaction pure","Gemini 3 Pro très limité en gratuit","Données liées à Google"], priceDetail:"Gratuit (Gemini 2.5 Pro limité) | Google AI Pro : ~20$/mois" },
+  { name:"Le Chat (Mistral)", cat:"Assistant IA", icon:"🇫🇷", price:"freemium", isNew:false, url:"https://chat.mistral.ai", tagline:"La meilleure IA française — RGPD", desc:"Le Chat est l'interface de Mistral AI, startup française. Conforme RGPD, données hébergées en Europe. Excellent en français, idéal pour les établissements soucieux de la souveraineté numérique.", steps:[{t:"Créer un compte",d:"Va sur <strong>chat.mistral.ai</strong> — interface entièrement en français."},{t:"Choisir le modèle",d:"Sélectionne <strong>Mistral Large</strong> pour les tâches complexes."},{t:"Activer la recherche web",d:"Active <strong>web search</strong> pour des réponses à jour."},{t:"Tester en français",d:"Mistral excelle particulièrement en <strong>rédaction académique française</strong>."}], pros:["Données hébergées en Europe (RGPD)","Excellent en français","Open source partiel"], cons:["Moins connu que ChatGPT","Moins d'intégrations tierces","Moins de multimédia"], priceDetail:"Gratuit (Mistral Small) | Pro : tarif mensuel avec Mistral Large" },
+  { name:"Midjourney", cat:"Image / Design", icon:"🎨", price:"paid", isNew:false, url:"https://www.midjourney.com", tagline:"Le générateur d'images IA le plus artistique", desc:"Midjourney est la référence pour la génération d'images artistiques de haute qualité. Très utilisé en design, branding, illustration. Fonctionne via interface web.", steps:[{t:"S'abonner",d:"Va sur <strong>midjourney.com</strong> — 10$/mois minimum."},{t:"Écrire un prompt",d:"Décris en anglais : <strong>« a minimalist logo for a tech startup, flat design, blue tones »</strong>"},{t:"Affiner",d:"Clique sur <strong>U1/U2</strong> pour agrandir, <strong>V1/V2</strong> pour des variations."},{t:"Paramètres",d:"Ajoute <strong>--ar 16:9</strong> pour le format, <strong>--v 7</strong> pour la dernière version."}], pros:["Qualité artistique inégalée","Nombreux styles","Communauté massive"], cons:["Payant dès le départ (10$/mois)","Courbe d'apprentissage","Droits à vérifier selon plan"], priceDetail:"Basic : 10$/mois (200 images) | Standard : 30$/mois illimité" },
+  { name:"DALL·E / GPT Image", cat:"Image / Design", icon:"🖼", price:"freemium", isNew:false, url:"https://chat.openai.com", tagline:"Génération d'images directement dans ChatGPT", desc:"GPT Image 1.5 est intégré dans ChatGPT. Il génère des images réalistes, illustrations, logos et maquettes à partir de descriptions en français.", steps:[{t:"Ouvrir ChatGPT",d:"Va sur <strong>chat.openai.com</strong>."},{t:"Demander une image",d:"Tape en français : <strong>« Génère un logo pour une app de sport, orange et noir »</strong>"},{t:"Affiner",d:"Demande : <strong>« Fond transparent »</strong>, <strong>« Style plus minimaliste »</strong>"},{t:"Télécharger",d:"Clique sur l'image pour l'agrandir puis <strong>télécharge en PNG</strong>."}], pros:["Intégré à ChatGPT","Comprend le français","Bon pour logos et maquettes"], cons:["2-3 images/jour en gratuit","Moins artistique que Midjourney","Résolution limitée"], priceDetail:"Gratuit (2-3/jour) | ChatGPT Plus (20$/mois) : accès élargi" },
+  { name:"Adobe Firefly", cat:"Image / Design", icon:"🔥", price:"freemium", isNew:false, url:"https://firefly.adobe.com", tagline:"Images IA commercialement sûres d'Adobe", desc:"Adobe Firefly génère images, vecteurs et effets sonores. Son atout : toutes les images sont commercialement sûres (entraînées sur des images licenciées). Intégré dans Photoshop et Illustrator.", steps:[{t:"Accéder à Firefly",d:"Va sur <strong>firefly.adobe.com</strong> avec un compte Adobe gratuit."},{t:"Générer une image",d:"Tape ton prompt et choisis un <strong>style</strong> (photo, art, vectoriel)."},{t:"Modifier dans Photoshop",d:"Utilise le <strong>Generative Fill</strong> : sélectionne une zone et décris ce tu veux."},{t:"Créer des vecteurs",d:"Dans « Génération de vecteurs », produis un <strong>fichier SVG</strong> directement modifiable."}], pros:["Commercialement sûr","Intégré à Photoshop & Illustrator","Génération vectorielle"], cons:["25 crédits/mois en gratuit","Moins artistique que Midjourney","Compte Adobe requis"], priceDetail:"Gratuit (25 crédits/mois) | Inclus dans Creative Cloud à partir de 60€/mois" },
+  { name:"Canva AI", cat:"Image / Design", icon:"✏️", price:"freemium", isNew:false, url:"https://www.canva.com/fr_fr", tagline:"Design complet + IA — le plus accessible", desc:"Canva intègre génération d'images, vidéos (Veo-3 de Google), suppression d'arrière-plan, traduction automatique, design de logos et générateur de musique.", steps:[{t:"Créer un compte",d:"Va sur <strong>canva.com</strong> — interface en français, compte gratuit."},{t:"Choisir un modèle",d:"Tape ton usage : <strong>« poster A4 »</strong>, <strong>« logo »</strong>, <strong>« présentation »</strong>."},{t:"Utiliser l'IA",d:"Clique sur <strong>Apps → Magic Media</strong> pour générer une image."},{t:"Exporter",d:"Télécharge en <strong>PNG, PDF ou JPG</strong>."}], pros:["Interface la plus simple","Milliers de templates","Génération vidéo IA (Veo-3)"], cons:["Fonctions avancées payantes","Moins de contrôle créatif","Personnalisation limitée en gratuit"], priceDetail:"Gratuit | Canva Pro : ~15€/mois" },
+  { name:"Ideogram AI", cat:"Image / Design", icon:"🔤", price:"freemium", isNew:true, url:"https://ideogram.ai", tagline:"Génère des images avec du texte lisible — idéal logos", desc:"Ideogram résout le problème du texte illisible dans les images IA. Parfait pour affiches, logos avec slogan, vignettes YouTube et tout visuel nécessitant de l'écriture.", steps:[{t:"Créer un compte",d:"Va sur <strong>ideogram.ai</strong> — 10 crédits/jour gratuits."},{t:"Écrire ton prompt",d:"Inclus le texte entre guillemets : <strong>« Logo for \"Morning Brew\", minimalist, gold »</strong>"},{t:"Choisir le style",d:"Sélectionne : Realistic, Design, Illustration, Anime…"},{t:"Upscaler",d:"Clique sur <strong>Upscale</strong> pour augmenter la résolution."}], pros:["Texte lisible dans les images (unique)","Idéal logos et affiches","10 générations gratuites/jour"], cons:["Moins artistique que Midjourney","Interface en anglais","Crédits limités"], priceDetail:"Gratuit (10/jour) | Basic : 7$/mois (100 crédits)" },
+  { name:"Suno AI", cat:"Musique / Audio", icon:"🎵", price:"freemium", isNew:false, url:"https://suno.com", tagline:"Compose une chanson complète en 30 secondes", desc:"Suno AI génère des chansons complètes (voix, instruments, structure) avec une qualité quasi professionnelle depuis sa version 5. Tu décris le style et les paroles, Suno compose.", steps:[{t:"Créer un compte",d:"Va sur <strong>suno.com</strong> — 50 crédits gratuits/jour."},{t:"Décrire le morceau",d:"<strong>« pop française mélancolique, voix féminine, tempo lent, paroles sur l'été »</strong>"},{t:"Ajouter des paroles",d:"Active le <strong>mode custom</strong> pour écrire tes propres paroles."},{t:"Télécharger",d:"Clique sur <strong>··· → Download</strong> pour récupérer le MP3."}], pros:["Qualité vocale quasi humaine (v5)","Très rapide — 30 secondes","50 crédits gratuits/jour"], cons:["Droits commerciaux : plan payant requis","Peu de contrôle sur les arrangements","Parfois incohérent sur les longues paroles"], priceDetail:"Gratuit (50/jour, non commercial) | Pro : 10$/mois" },
+  { name:"Udio", cat:"Musique / Audio", icon:"🎶", price:"freemium", isNew:true, url:"https://www.udio.com", tagline:"Génération musicale ultra-réaliste", desc:"Udio excelle sur les musiques instrumentales et les genres de niche (jazz, metal progressif, musique du monde). Offre plus de contrôle sur la structure que Suno.", steps:[{t:"S'inscrire",d:"Va sur <strong>udio.com</strong> — 100 crédits/mois gratuits."},{t:"Choisir un style",d:"<strong>« jazz fusion, saxophone, 90s New York, instrumental »</strong>"},{t:"Étendre une piste",d:"Clique sur <strong>Extend</strong> pour allonger un morceau existant."},{t:"Mixer les styles",d:"<strong>« classical orchestra + electronic bass + hip-hop drums »</strong>"}], pros:["Excellente qualité sur genres variés","Plus de contrôle que Suno","Bonne pour la musique instrumentale"], cons:["100 crédits/mois seulement","Interface moins intuitive","Moins de crédits gratuits quotidiens"], priceDetail:"Gratuit (100/mois) | Standard : 10$/mois" },
+  { name:"ElevenLabs", cat:"Musique / Audio", icon:"🎙", price:"freemium", isNew:false, url:"https://elevenlabs.io", tagline:"Voix IA ultra-réaliste et clonage de voix", desc:"ElevenLabs est la référence pour la synthèse vocale. Il génère des voix quasi humaines avec émotions et intonations naturelles, et permet de cloner sa propre voix.", steps:[{t:"Créer un compte",d:"Va sur <strong>elevenlabs.io</strong> — 10 000 caractères/mois gratuits."},{t:"Text to Speech",d:"Colle ton texte, sélectionne une voix parmi <strong>1000+</strong> et génère."},{t:"Cloner sa voix",d:"Dans <strong>Voice Lab</strong>, enregistre 3 minutes de ta voix."},{t:"Balises d'émotion",d:"Utilise <strong>[excited]</strong>, <strong>[calm]</strong>, <strong>[sad]</strong> pour moduler le ton."}], pros:["Voix la plus réaliste","1000+ voix en 29 langues","Clonage de voix"], cons:["10 000 caractères/mois en gratuit","Clonage payant commercial","Risques éthiques (deepvoice)"], priceDetail:"Gratuit (10 000 car./mois) | Starter : 5$/mois | Creator : 22$/mois" },
+  { name:"Soundraw", cat:"Musique / Audio", icon:"🎸", price:"paid", isNew:false, url:"https://soundraw.io", tagline:"Musique libre de droits générée sur mesure", desc:"Soundraw génère des musiques libres de droits pour créateurs vidéo et podcasters. Tu choisis genre, tempo, ambiance et durée — la musique est unique et utilisable sur YouTube.", steps:[{t:"Accéder",d:"Va sur <strong>soundraw.io</strong> — écoute sans inscription."},{t:"Configurer",d:"Sélectionne <strong>genre, tempo et thème</strong> (Lo-Fi, Cinematic, Corporate…)"},{t:"Ajuster la durée",d:"Fais glisser la <strong>timeline</strong> pour définir exactement la durée voulue."},{t:"Télécharger",d:"<strong>Abonnement requis</strong> pour télécharger."}], pros:["100% libre de droits","Personnalisation avancée","Milliers de styles"], cons:["Téléchargement payant","Pas de voix","Interface en anglais"], priceDetail:"Gratuit (écoute) | Créateur : 16.99$/mois" },
+  { name:"Runway Gen-4.5", cat:"Vidéo", icon:"🎬", price:"freemium", isNew:true, url:"https://runwayml.com", tagline:"N°1 du leaderboard vidéo IA en 2026", desc:"Runway Gen-4.5 domine le benchmark Video Arena. Il offre physique réaliste (fluides, tissus, inertie), fidélité cinématique et personnages expressifs. Partenariat NVIDIA Blackwell.", steps:[{t:"Créer un compte",d:"Va sur <strong>runwayml.com</strong> — 125 crédits offerts."},{t:"Text to Video",d:"Choisis <strong>Gen-4.5</strong> et décris ta scène en anglais."},{t:"Image to Video",d:"Télécharge une image et décris le <strong>mouvement souhaité</strong>."},{t:"Paramètres",d:"Règle durée (4s/8s), <strong>mouvement caméra</strong> et style."}], pros:["Meilleure qualité vidéo (benchmark)","Physique ultra-réaliste","Text-to-video ET image-to-video"], cons:["Payant rapidement après les crédits","Interface en anglais","Max 4-8 secondes"], priceDetail:"Gratuit (125 crédits) | Basic : 15$/mois | Standard : 35$/mois" },
+  { name:"Sora (OpenAI)", cat:"Vidéo", icon:"🌀", price:"paid", isNew:true, url:"https://sora.com", tagline:"Génération vidéo narrative d'OpenAI", desc:"Sora 2 Pro inclut des outils narratifs avancés (Storyboard, Remix, Blend) et une excellente compréhension des histoires visuelles.", steps:[{t:"Accéder",d:"<strong>Sora est inclus dans ChatGPT Plus</strong> (20$/mois)."},{t:"Créer une vidéo",d:"Décris en détail : <strong>« A golden retriever in snowy park, sunset, camera zooming out »</strong>"},{t:"Storyboard",d:"Active le mode <strong>Storyboard</strong> pour une séquence de plans liés."},{t:"Remixer",d:"Utilise <strong>Remix</strong> pour modifier style ou éléments visuels."}], pros:["Excellent pour narration visuelle","Storyboard et Blend uniques","Intégré à OpenAI"], cons:["Réservé aux abonnés Plus/Pro","Résolution parfois inférieure à Runway","Pas partout dans le monde"], priceDetail:"Inclus dans ChatGPT Plus (20$/mois) | Complet avec Pro (200$/mois)" },
+  { name:"HeyGen", cat:"Vidéo", icon:"👤", price:"freemium", isNew:false, url:"https://www.heygen.com", tagline:"Vidéos avec avatars IA ultra-réalistes", desc:"HeyGen est N°1 G2 dans les générateurs vidéo IA 2026. Il crée des vidéos pro avec avatars à partir d'un script texte. Idéal e-learning, marketing, formations.", steps:[{t:"Créer un compte",d:"Va sur <strong>heygen.com</strong> — 1 minute vidéo gratuite."},{t:"Choisir un avatar",d:"Browse les <strong>230+ avatars</strong> — filtre genre, âge, style."},{t:"Écrire le script",d:"Tape ton texte — l'avatar lit dans <strong>140+ langues</strong>."},{t:"Traduire",d:"<strong>Video Translation</strong> : télécharge une vidéo et HeyGen traduit avec lip-sync."}], pros:["Avatars Express-2 ultra-réalistes","140+ langues avec lip-sync","N°1 G2 reconnu"], cons:["Coût élevé pour usage avancé","1 min gratuite seulement","Style parfois trop corporate"], priceDetail:"Gratuit (1 min) | Creator : 29$/mois | Business : 89$/mois" },
+  { name:"Veo 3 (Google)", cat:"Vidéo", icon:"🎥", price:"paid", isNew:true, url:"https://gemini.google.com", tagline:"Meilleure synchronisation audio-vidéo", desc:"Veo 3.1 génère des clips jusqu'à 60 secondes avec audio natif synchronisé (dialogues, bruitages, musique). Intégré à Gemini et Canva.", steps:[{t:"Accéder via Canva",d:"Dans Canva Pro, cherche <strong>« Séquence vidéo »</strong> dans les outils IA."},{t:"Écrire le prompt",d:"Décris la scène avec l'audio : <strong>« jazz musician, rainy Paris, diegetic sound »</strong>"},{t:"Via Gemini Ultra",d:"Avec Google AI Pro, génère des <strong>clips de 8 secondes</strong> ultra-réalistes."},{t:"Intégrer",d:"Intègre directement le clip dans <strong>ton design Canva</strong>."}], pros:["Meilleure synchronisation audio","Audio natif intégré","Qualité cinématographique"], cons:["Accès très restreint","Coût élevé","Max 60 secondes"], priceDetail:"Via Google AI Pro (~20$/mois) ou Canva Pro (~15€/mois)" },
+  { name:"Descript", cat:"Vidéo", icon:"✂️", price:"freemium", isNew:false, url:"https://www.descript.com", tagline:"Montage vidéo en éditant le texte", desc:"Descript révolutionne le montage : tu édites la transcription texte et les coupes se font automatiquement. Parfait pour podcasts, tutoriels et formations.", steps:[{t:"Créer un compte",d:"Va sur <strong>descript.com</strong> — 1h de transcription gratuite."},{t:"Importer ta vidéo",d:"Glisse ta vidéo — transcription en quelques minutes."},{t:"Éditer comme du texte",d:"Supprime des mots dans le texte — <strong>les coupes s'appliquent automatiquement</strong>."},{t:"Supprimer les silences",d:"Clique sur <strong>« Remove Silences »</strong> — supprime toutes les pauses en 1 clic."}], pros:["Montage vidéo via texte (révolutionnaire)","Suppression silences auto","Clonage de voix pour corriger"], cons:["1h gratuite puis payant","Complexe pour les montages créatifs","Interface en anglais"], priceDetail:"Gratuit (1h) | Creator : 24$/mois | Pro : 40$/mois" },
+  { name:"Notion AI", cat:"Texte / Rédaction", icon:"📝", price:"paid", isNew:false, url:"https://www.notion.so/fr-fr", tagline:"IA intégrée à ta prise de notes", desc:"Notion AI résume des pages entières, rédige des brouillons, génère des tableaux et aide à structurer des projets directement dans ton espace Notion.", steps:[{t:"Ouvrir Notion",d:"Va sur <strong>notion.so</strong> — Notion AI est un add-on payant (10$/mois)."},{t:"Activer l'IA",d:"Dans toute page, tape <strong>/AI</strong> pour ouvrir l'assistant."},{t:"Résumer un cours",d:"Sélectionne ton texte et demande <strong>« Résume en 5 points clés »</strong>."},{t:"Générer un plan",d:"Tape <strong>« Crée un plan pour un rapport sur [sujet] »</strong>."}], pros:["Directement dans ton espace de travail","Résumé et structuration excellents","Génère des tableaux IA"], cons:["Add-on payant (10$/mois)","Moins puissant qu'un LLM standalone","Nécessite d'utiliser Notion"], priceDetail:"Notion gratuit + Notion AI : 10$/mois/utilisateur" },
+  { name:"Grammarly", cat:"Texte / Rédaction", icon:"✅", price:"freemium", isNew:false, url:"https://www.grammarly.com", tagline:"Correction et amélioration de texte en temps réel", desc:"Grammarly corrige la grammaire, le style et la clarté en temps réel. En 2026, il intègre une IA générative pour reformuler et adapter le style selon le contexte.", steps:[{t:"Installer l'extension",d:"Va sur <strong>grammarly.com</strong> — installe l'extension Chrome ou Firefox."},{t:"Activer",d:"<strong>Écris normalement</strong> — Grammarly souligne les erreurs automatiquement."},{t:"Améliorer le style",d:"Clique sur <strong>« Improve it »</strong> pour des suggestions de reformulation."},{t:"Choisir le ton",d:"Sélectionne le <strong>registre</strong> (académique, pro, décontracté)."}], pros:["Fonctionne partout (Gmail, Word, navigateur)","Correction temps réel très précise","Suggestions de style et de ton"], cons:["Principalement en anglais","Fonctions avancées payantes","Peut être intrusif"], priceDetail:"Gratuit (corrections de base) | Premium : 12$/mois" },
+  { name:"Copy.ai", cat:"Texte / Rédaction", icon:"📋", price:"freemium", isNew:false, url:"https://www.copy.ai", tagline:"Génération de contenus — 90+ templates", desc:"Copy.ai est spécialisé dans la génération de contenus : posts réseaux sociaux, emails, descriptions produits, introductions académiques.", steps:[{t:"S'inscrire",d:"Va sur <strong>copy.ai</strong> — 2 000 mots/mois gratuits."},{t:"Choisir un template",d:"Parcours les <strong>90+ templates</strong> : blog intro, email, AIDA…"},{t:"Remplir le formulaire",d:"Décris ton sujet, audience et ton, puis génère."},{t:"Affiner",d:"Choisis parmi les <strong>3-5 variations</strong> proposées."}], pros:["90+ templates prêts","Très rapide pour les contenus marketing","Interface simple"], cons:["2 000 mots/mois en gratuit","Moins puissant que Claude","Orienté marketing"], priceDetail:"Gratuit (2 000 mots) | Pro : 49$/mois | Solo : 36$/mois" },
+  { name:"GitHub Copilot", cat:"Code", icon:"🐙", price:"freemium", isNew:false, url:"https://github.com/features/copilot", tagline:"L'IA de code la plus utilisée par les développeurs", desc:"GitHub Copilot est intégré à VS Code et JetBrains. Il complète le code, génère des fonctions à partir de commentaires, explique le code et génère des tests.", steps:[{t:"S'inscrire",d:"Gratuit pour les étudiants via <strong>GitHub Education</strong> (email universitaire)."},{t:"Installer l'extension",d:"Dans VS Code : Extensions → cherche <strong>« GitHub Copilot »</strong>."},{t:"Autocomplétion",d:"Commence à taper — appuie sur <strong>Tab</strong> pour accepter les suggestions."},{t:"Copilot Chat",d:"Ouvre le panneau chat et demande : <strong>« Explique ce code »</strong>, <strong>« Génère les tests »</strong>"}], pros:["Gratuit pour les étudiants","Intégration parfaite VS Code","30+ langages"], cons:["Parfois suggère du code incorrect","Nécessite VS Code ou JetBrains","10$/mois hors étudiants"], priceDetail:"Gratuit (GitHub Education) | Pro : 10$/mois | Business : 19$/mois" },
+  { name:"Cursor", cat:"Code", icon:"⚡", price:"freemium", isNew:true, url:"https://www.cursor.com", tagline:"L'éditeur de code IA nouvelle génération", desc:"Cursor est un éditeur basé sur VS Code intégrant des modèles IA avancés. Il comprend l'ensemble de ta base de code et effectue des modifications multi-fichiers.", steps:[{t:"Télécharger",d:"Va sur <strong>cursor.com</strong> — interface identique à VS Code."},{t:"Cmd+K",d:"Sélectionne du code et tape une instruction en <strong>langage naturel</strong>."},{t:"Chat codebase",d:"Appuie sur <strong>Cmd+L</strong> — Cursor analyse tous tes fichiers."},{t:"Mode Composer",d:"<strong>Cmd+I</strong> pour des tâches complexes multi-fichiers."}], pros:["Comprend tout le contexte de ta base","Modifications multi-fichiers","Interface VS Code familière"], cons:["Gratuit limité (500 complétions/mois)","Peut être gourmand en ressources","Courbe d'apprentissage"], priceDetail:"Gratuit (500 complétions) | Pro : 20$/mois" },
+  { name:"Replit AI", cat:"Code", icon:"🔄", price:"freemium", isNew:false, url:"https://replit.com", tagline:"Coder, héberger et déployer depuis le navigateur", desc:"Replit combine éditeur, hébergement et IA de génération de code dans une interface web. Idéal pour les débutants ou pour tester rapidement des idées sans rien installer.", steps:[{t:"Créer un compte",d:"Va sur <strong>replit.com</strong> — compte gratuit."},{t:"Créer un Repl",d:"Clique sur <strong>« Create Repl »</strong> et choisis ton langage."},{t:"Ghostwriter IA",d:"Clique sur l'<strong>icône IA</strong> : <strong>« Crée une calculatrice avec interface »</strong>"},{t:"Déployer",d:"Clique sur <strong>« Deploy »</strong> — URL publique en un clic."}], pros:["0 installation","Déploiement en un clic","Bon pour les débutants"], cons:["Performance limitée en gratuit","Moins puissant que Cursor","Connexion internet requise"], priceDetail:"Gratuit | Replit Core : 25$/mois" },
+  { name:"Lovable", cat:"Code", icon:"💜", price:"freemium", isNew:true, url:"https://lovable.dev", tagline:"Crée une app complète sans coder", desc:"Lovable est l'outil de vibe coding le plus accessible. Tu décris l'application et Lovable génère le code complet (front-end + base de données). Idéal pour les non-développeurs.", steps:[{t:"Créer un compte",d:"Va sur <strong>lovable.dev</strong> — 5 projets gratuits."},{t:"Décrire ton app",d:"<strong>« Crée une to-do list avec auth, catégories et interface sombre »</strong>"},{t:"Itérer",d:"Clique sur des éléments et tape tes demandes — <strong>mise à jour en temps réel</strong>."},{t:"Publier",d:"Clique sur <strong>« Publish »</strong> pour une URL publique automatique."}], pros:["Aucune compétence en code requise","App complète en minutes","Base de données intégrée"], cons:["5 projets gratuits seulement","Limité pour apps très complexes","Personnalisation avancée = code"], priceDetail:"Gratuit (5 projets) | Starter : 20$/mois | Pro : 50$/mois" },
+  { name:"Gamma", cat:"Présentations", icon:"✨", price:"freemium", isNew:false, url:"https://gamma.app", tagline:"Présentation professionnelle en 30 secondes", desc:"Gamma génère automatiquement des présentations visuellement propres à partir de ton texte. Il s'adapte au contenu et choisit automatiquement la mise en page optimale.", steps:[{t:"Créer un compte",d:"Va sur <strong>gamma.app</strong> — 400 crédits IA offerts."},{t:"Générer",d:"Clique sur <strong>« New AI »</strong> → Presentation. Décris le sujet et le nombre de slides."},{t:"Personnaliser",d:"Choisis un <strong>thème visuel</strong> avant de valider."},{t:"Partager",d:"Partage via <strong>lien</strong> ou exporte en PDF/PowerPoint."}], pros:["30 secondes pour une présentation","Design automatiquement cohérent","Export PowerPoint possible"], cons:["400 crédits puis payant","Moins de contrôle qu'un vrai PPT","Styles graphiques limités"], priceDetail:"Gratuit (400 crédits) | Plus : 10$/mois" },
+  { name:"Beautiful.ai", cat:"Présentations", icon:"🎯", price:"paid", isNew:false, url:"https://www.beautiful.ai", tagline:"Smart Slides — mise en page automatique", desc:"Beautiful.ai propose un système Smart Slides qui reconfigure automatiquement la mise en page quand tu ajoutes du contenu.", steps:[{t:"Créer un compte",d:"Va sur <strong>beautiful.ai</strong> — essai gratuit 14 jours."},{t:"Démarrer un deck",d:"Choisis un template ou <strong>décris ta présentation à l'IA</strong>."},{t:"Ajouter du contenu",d:"Tape ton contenu — <strong>mise en page ajustée automatiquement</strong>."},{t:"Charte",d:"Configure couleurs, polices et logo dans <strong>Brand settings</strong>."}], pros:["Mise en page automatique et propre","Contrôle de marque intégré","Idéal pour les équipes"], cons:["14 jours puis 12$/mois","Moins de liberté créative","Pas de plan vraiment gratuit"], priceDetail:"Essai 14 jours | Pro : 12$/mois/user (annuel)" },
+  { name:"Napkin AI", cat:"Présentations", icon:"🗒", price:"freemium", isNew:true, url:"https://www.napkin.ai", tagline:"Transforme ton texte en schémas visuels", desc:"Napkin AI transforme automatiquement du texte brut en schémas visuels, diagrammes et infographies. Idéal pour visualiser des concepts abstraits.", steps:[{t:"Créer un compte",d:"Va sur <strong>napkin.ai</strong> — inscription gratuite."},{t:"Coller ton texte",d:"Copie-colle un paragraphe ou une explication."},{t:"Générer",d:"Clique sur <strong>« Generate »</strong> — plusieurs représentations visuelles proposées."},{t:"Exporter",d:"Télécharge en <strong>PNG ou SVG</strong> pour tes présentations."}], pros:["Texte → schéma en quelques secondes","Idéal pour concepts abstraits","Nombreux styles de diagrammes"], cons:["Fonctionnalités en beta","Moins adapté aux données chiffrées","Export limité en gratuit"], priceDetail:"Gratuit (limité) | Pro : tarif mensuel sur le site" },
+  { name:"Perplexity AI", cat:"Recherche / Analyse", icon:"🔍", price:"freemium", isNew:false, url:"https://www.perplexity.ai", tagline:"Moteur de recherche IA avec sources vérifiées", desc:"Perplexity est un moteur de recherche conversationnel qui cite ses sources automatiquement. Idéal pour la recherche académique et la veille technologique.", steps:[{t:"Accéder",d:"Va sur <strong>perplexity.ai</strong> — aucun compte requis pour commencer."},{t:"Poser une question",d:"<strong>« Quels sont les derniers modèles IA open source sortis en 2025 ? »</strong>"},{t:"Vérifier les sources",d:"Chaque affirmation est <strong>numérotée avec un lien source</strong> — clique pour vérifier."},{t:"Approfondir",d:"Pose des questions de suivi — <strong>Perplexity garde le contexte</strong>."}], pros:["Sources citées automatiquement","Informations à jour","Idéal pour la recherche académique"], cons:["Profondeur d'analyse limitée vs Claude","Pro nécessaire pour les modèles avancés","Sources parfois de qualité variable"], priceDetail:"Gratuit (illimité basique) | Pro : 20$/mois" },
+  { name:"NotebookLM", cat:"Recherche / Analyse", icon:"📚", price:"free", isNew:false, url:"https://notebooklm.google.com", tagline:"Dialogue avec tes propres documents — 100% gratuit", desc:"NotebookLM te permet d'importer tes propres documents (PDF, articles, notes) pour les interroger comme un assistant personnel avec citations précises. Podcast IA inclus.", steps:[{t:"Accéder",d:"Va sur <strong>notebooklm.google.com</strong> avec ton compte Google — 100% gratuit."},{t:"Importer des sources",d:"Clique sur <strong>« Add source »</strong> — jusqu'à 50 sources par projet."},{t:"Poser des questions",d:"<strong>« Quels sont les 3 arguments principaux ? »</strong>, <strong>« Quelles contradictions vois-tu ? »</strong>"},{t:"Podcast",d:"Clique sur <strong>« Audio Overview »</strong> — podcast de 10-15 min sur tes documents."}], pros:["100% gratuit","Répond avec citations précises","Podcast IA de tes documents"], cons:["Uniquement sur tes documents","Pas de génération originale","Interface basique"], priceDetail:"100% gratuit via compte Google" },
+  { name:"Consensus", cat:"Recherche / Analyse", icon:"🔬", price:"freemium", isNew:false, url:"https://consensus.app", tagline:"Recherche scientifique et académique par IA", desc:"Consensus synthétise les résultats de millions d'articles académiques. Parfait pour les travaux de recherche, mémoires et revues de littérature.", steps:[{t:"Accéder",d:"Va sur <strong>consensus.app</strong> — 20 recherches/mois gratuites."},{t:"Poser une question",d:"En anglais : <strong>« Does social media use affect academic performance? »</strong>"},{t:"Analyser",d:"Consensus affiche un <strong>résumé de consensus</strong> et les études qui soutiennent ou contredisent."},{t:"Citer",d:"Exporte vers ton <strong>gestionnaire de citations</strong> (Zotero, etc.)"}], pros:["Synthèse de la littérature académique","Sources vérifiées et publiées","Idéal pour les mémoires"], cons:["20 recherches/mois en gratuit","Principalement en anglais","Ne remplace pas une vraie revue"], priceDetail:"Gratuit (20/mois) | Premium : 9.99$/mois" },
+  { name:"D-ID", cat:"Avatars / Voix", icon:"🎭", price:"freemium", isNew:false, url:"https://www.d-id.com", tagline:"Anime n'importe quelle photo en vidéo parlante", desc:"D-ID permet d'animer une photo statique en vidéo avec voix synchronisée. Très utilisé pour présentateurs virtuels, formations e-learning et contenus éducatifs.", steps:[{t:"Créer un compte",d:"Va sur <strong>d-id.com</strong> — 5 vidéos gratuites."},{t:"Uploader une image",d:"Clique sur <strong>« Create Video »</strong> — télécharge un portrait face caméra."},{t:"Script",d:"Tape ton texte ou télécharge un <strong>fichier audio</strong> — lip-sync automatique."},{t:"Choisir la voix",d:"Sélectionne parmi <strong>120+ voix IA</strong> en multiples langues."}], pros:["Animation de photo statique unique","Synchronisation labiale réaliste","Simple pour les débutants"], cons:["5 vidéos gratuites seulement","Qualité inférieure à HeyGen","Vidéos courtes en gratuit"], priceDetail:"Gratuit (5 vidéos) | Lite : 5.9$/mois | Pro : 49.9$/mois" },
+  { name:"Murf AI", cat:"Avatars / Voix", icon:"🔊", price:"freemium", isNew:false, url:"https://murf.ai", tagline:"Studio voix-off IA pour e-learning", desc:"Murf AI crée des voix-off professionnelles pour l'e-learning et les formations. Elle associe voix, visuels, sous-titres et musique dans une interface unifiée.", steps:[{t:"Créer un compte",d:"Va sur <strong>murf.ai</strong> — 10 min audio/mois gratuits."},{t:"Écrire le script",d:"Tape ou colle ton texte, structure par sections."},{t:"Choisir une voix",d:"Parcours les <strong>120+ voix en 20 langues</strong>."},{t:"Synchroniser slides",d:"Importe tes <strong>slides PowerPoint</strong> et synchronise la voix-off automatiquement."}], pros:["Voix-off + slides intégrées","120+ voix en 20 langues","Parfait pour e-learning"], cons:["10 min/mois en gratuit","Moins expressif qu'ElevenLabs","Style corporate"], priceDetail:"Gratuit (10 min/mois) | Basic : 23$/mois | Pro : 39$/mois" },
+  { name:"Framer AI", cat:"Design / No-code", icon:"🌐", price:"freemium", isNew:false, url:"https://www.framer.com", tagline:"Site web professionnel depuis une description", desc:"Framer AI génère des sites web visuellement parfaits à partir d'une description textuelle. Idéal pour portfolios étudiants, landing pages et présentations de projets.", steps:[{t:"Démarrer",d:"Va sur <strong>framer.com</strong> — clique sur « Start with AI »."},{t:"Décrire ton site",d:"<strong>« Portfolio design graphique, page accueil + projets + contact, style minimaliste »</strong>"},{t:"Modifier",d:"Clique sur n'importe quel élément pour le modifier dans l'<strong>éditeur drag-and-drop</strong>."},{t:"Publier",d:"Clique sur <strong>« Publish »</strong> — domaine framer.app gratuit inclus."}], pros:["Sites de qualité agence","Éditeur visuel puissant","Hébergement inclus"], cons:["Fonctions avancées payantes","Moins flexible que WordPress","Complexe pour les sites très avancés"], priceDetail:"Gratuit (domaine framer.app) | Mini : 5$/mois | Basic : 15$/mois" },
+];
+
+let newsData = {}; // { toolName: [{date, text}] }
+let TOOLS = [...BASE_TOOLS];
+
+// ── LOAD NEWS ────────────────────────────────────────────────────────────────
+async function loadNews() {
+  try {
+    const r = await fetch('news.json?t=' + Date.now());
+    if (!r.ok) throw new Error();
+    const data = await r.json();
+    newsData = data.news || {};
+    document.getElementById('last-update').textContent = 'Dernière mise à jour : ' + (data.lastUpdate || '—');
+    // Count news items
+    const count = Object.values(newsData).reduce((a,b)=>a+b.length,0);
+    const tools = Object.keys(newsData).length;
+    document.getElementById('news-count-stat').textContent = count;
+    document.getElementById('news-tools-count').textContent = tools;
+    renderNewsBanner();
+  } catch(e) {
+    document.getElementById('news-count-stat').textContent = '0';
+    document.getElementById('news-tools-count').textContent = '0';
+    document.getElementById('last-update').textContent = 'Dernière mise à jour : —';
+  }
+}
+
+function renderNewsBanner() {
+  const banner = document.getElementById('news-banner');
+  const entries = [];
+  for (const [tool, items] of Object.entries(newsData)) {
+    if (items.length > 0) entries.push({tool, text: items[0].text});
+  }
+  if (entries.length === 0) { banner.style.display='none'; return; }
+  banner.style.display = 'block';
+  banner.innerHTML = `<div class="news-banner-title">🗞 Actualités IA de la semaine</div>` +
+    entries.slice(0,5).map(e=>`<div class="news-item-line"><span class="news-tool-name">${e.tool}</span><span>${e.text}</span></div>`).join('');
+}
+
+// ── RENDER ───────────────────────────────────────────────────────────────────
+let activeFilter = 'all';
+let searchQuery  = '';
+
+function getCatColor(cat){ return CAT_COLORS[cat]||'#1a4fad'; }
+
+function getTagHTML(price, isNew) {
+  let p = '';
+  if (price==='free') p='<span class="tag tag-free">Gratuit</span>';
+  else if (price==='freemium') p='<span class="tag tag-freemium">Freemium</span>';
+  else if (price==='paid') p='<span class="tag tag-paid">Payant</span>';
+  if (isNew) p+=' <span class="tag tag-new">Nouveau</span>';
+  return p;
+}
+
+function renderCards(){
+  const grid=document.getElementById('grid');
+  const empty=document.getElementById('empty');
+  const label=document.getElementById('results-label');
+  const q=searchQuery.toLowerCase();
+
+  const filtered=TOOLS.filter(t=>{
+    const matchCat=activeFilter==='all'||t.cat===activeFilter;
+    const hasNews = newsData[t.name]&&newsData[t.name].length>0;
+    const matchSearch=!q||t.name.toLowerCase().includes(q)||t.cat.toLowerCase().includes(q)||t.desc.toLowerCase().includes(q)||t.tagline.toLowerCase().includes(q)||(hasNews && newsData[t.name][0].text.toLowerCase().includes(q));
+    return matchCat&&matchSearch;
+  });
+
+  grid.innerHTML='';
+  if(filtered.length===0){empty.style.display='block';label.textContent='0 résultat';return;}
+  empty.style.display='none';
+  label.textContent=activeFilter==='all'?`Tous les outils — ${filtered.length} référencés`:`${activeFilter} — ${filtered.length} outil${filtered.length>1?'s':''}`;
+
+  filtered.forEach((tool,i)=>{
+    const color=getCatColor(tool.cat);
+    const toolNews=newsData[tool.name]||[];
+    const card=document.createElement('div');
+    card.className='card';
+    card.style.animationDelay=`${i*30}ms`;
+
+    const newsSnippet = toolNews.length>0 ? `
+      <div class="card-news">
+        <div class="card-news-label">🗞 Nouveauté ${toolNews[0].date||''}</div>
+        ${toolNews[0].text}
+      </div>` : '';
+
+    const newsTag = toolNews.length>0 ? ' <span class="tag tag-news">ACTU</span>' : '';
+
+    card.innerHTML=`
+      <div class="card-top">
+        <div class="card-icon-name">
+          <div class="card-icon" style="background:${color}10">${tool.icon}</div>
+          <div class="card-name">${tool.name}</div>
+        </div>
+        <div class="card-badges">${getTagHTML(tool.price,tool.isNew)}${newsTag}</div>
+      </div>
+      <div class="card-cat" style="color:${color}">${tool.cat}</div>
+      <div class="card-desc">${tool.tagline}</div>
+      ${newsSnippet}
+      <div class="card-footer">
+        <a class="card-link" href="${tool.url}" target="_blank" onclick="event.stopPropagation()">Accéder →</a>
+        <button class="card-btn" onclick="event.stopPropagation();openModal(${TOOLS.indexOf(tool)})">Fiche + mode d'emploi</button>
+      </div>
+    `;
+    card.addEventListener('click',()=>openModal(TOOLS.indexOf(tool)));
+    grid.appendChild(card);
+  });
+}
+
+// ── MODAL ────────────────────────────────────────────────────────────────────
+function openModal(idx){
+  const t=TOOLS[idx];
+  const color=getCatColor(t.cat);
+  const toolNews=newsData[t.name]||[];
+
+  document.getElementById('modal-icon').textContent=t.icon;
+  document.getElementById('modal-icon').style.background=`${color}10`;
+  document.getElementById('modal-name').textContent=t.name;
+  document.getElementById('modal-cat').textContent=t.cat;
+  document.getElementById('modal-cat').style.color=color;
+  document.getElementById('modal-tagline').textContent=t.tagline;
+  document.getElementById('modal-badges').innerHTML=getTagHTML(t.price,t.isNew);
+  document.getElementById('modal-desc').textContent=t.desc;
+  document.getElementById('modal-price').textContent=t.priceDetail;
+  document.getElementById('modal-link').href=t.url;
+
+  // News in modal
+  const newsSection=document.getElementById('modal-news-section');
+  if(toolNews.length>0){
+    newsSection.innerHTML=`
+      <div class="modal-news">
+        <div class="modal-news-title">🗞 Actualités récentes sur ${t.name}</div>
+        ${toolNews.map(n=>`<div class="modal-news-item"><div class="modal-news-date">${n.date||''}</div>${n.text}</div>`).join('')}
+      </div>`;
+  } else {
+    newsSection.innerHTML='';
+  }
+
+  document.getElementById('modal-steps').innerHTML=t.steps.map((s,i)=>`
+    <div class="step">
+      <div class="step-num">${i+1}</div>
+      <div><div class="step-title">${s.t}</div><div class="step-text">${s.d}</div></div>
+    </div>`).join('');
+
+  document.getElementById('modal-pros').innerHTML=t.pros.map(p=>`<li>${p}</li>`).join('');
+  document.getElementById('modal-cons').innerHTML=t.cons.map(c=>`<li>${c}</li>`).join('');
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(){
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.getElementById('modal-overlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+// ── FILTERS ──────────────────────────────────────────────────────────────────
+document.getElementById('filters').addEventListener('click',e=>{
+  const btn=e.target.closest('.filter-btn');
+  if(!btn)return;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter=btn.dataset.cat;
+  renderCards();
+});
+
+document.getElementById('search').addEventListener('input',e=>{
+  searchQuery=e.target.value;
+  renderCards();
+});
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+document.getElementById('total-count').textContent=TOOLS.length;
+loadNews().then(()=>renderCards());
+</script>
+</body>
+</html>

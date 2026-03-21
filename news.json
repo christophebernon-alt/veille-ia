@@ -1,0 +1,29 @@
+{
+  "lastUpdate": "21 mars 2026",
+  "news": {
+    "Canva AI": [
+      {
+        "date": "Mars 2026",
+        "text": "Canva intègre désormais Veo-3 de Google pour la génération vidéo directement depuis l'éditeur. Les utilisateurs Pro peuvent générer des clips de 8 secondes avec synchronisation audio native."
+      }
+    ],
+    "ChatGPT": [
+      {
+        "date": "Mars 2026",
+        "text": "OpenAI annonce GPT-5 avec une fenêtre de contexte étendue à 1 million de tokens et des capacités de raisonnement améliorées sur les problèmes mathématiques complexes."
+      }
+    ],
+    "Runway Gen-4.5": [
+      {
+        "date": "Février 2026",
+        "text": "Runway Gen-4.5 atteint 1247 points Elo sur le Video Arena Leaderboard, consolidant sa position de leader. Le partenariat NVIDIA Blackwell réduit les temps de génération de 40%."
+      }
+    ],
+    "ElevenLabs": [
+      {
+        "date": "Mars 2026",
+        "text": "ElevenLabs lance ElevenLabs Studio, un environnement complet de production audio permettant de créer des podcasts, livres audio et voix-off multi-locuteurs depuis une interface unifiée."
+      }
+    ]
+  }
+}
