@@ -2,10 +2,7 @@ name: Veille IA — Mise à jour hebdomadaire
 
 on:
   schedule:
-    # Tous les lundis à 8h00 (heure Paris = 7h UTC en été, 8h UTC en hiver)
     - cron: '0 7 * * 1'
-
-  # Permet aussi de lancer manuellement depuis GitHub
   workflow_dispatch:
 
 jobs:
@@ -13,21 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Récupérer les fichiers du dépôt
       - name: Checkout du dépôt
         uses: actions/checkout@v4
 
-      # 2. Installer Python
       - name: Configurer Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      # 3. Installer les dépendances Python
       - name: Installer les dépendances
         run: pip install anthropic requests beautifulsoup4
 
-      # 4. Lancer le script de mise à jour
       - name: Lancer la veille IA
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -39,9 +32,23 @@ jobs:
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
         run: python3 veille_ia_updater.py
 
-      # 5. Sauvegarder le news.json mis à jour dans le dépôt
-      - name: Sauvegarder news.json
+      - name: Sauvegarder news.json dans GitHub
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: '🗞 Mise à jour automatique veille IA'
           file_pattern: news.json
+
+      - name: Déployer tous les fichiers sur le serveur via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./
+          server-dir: /consultant-web-formation.fr/IA/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            veille_ia_updater.py
+            README.md
