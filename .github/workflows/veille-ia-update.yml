@@ -38,17 +38,14 @@ jobs:
           commit_message: '🗞 Mise à jour automatique veille IA'
           file_pattern: news.json
 
-      - name: Déployer tous les fichiers sur le serveur via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Déployer les fichiers sur le serveur via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./
-          server-dir: /consultant-web-formation.fr/IA/
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            veille_ia_updater.py
-            README.md
+          port: 22
+          local_path: './*'
+          remote_path: /consultant-web-formation.fr/IA/
+          sftp_only: true
+          args: '-o StrictHostKeyChecking=no'
